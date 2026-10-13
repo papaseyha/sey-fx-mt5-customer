@@ -600,9 +600,9 @@ svg{
     border:1px solid #69516d;color:white;"
   >
 
-  <button id="connectMt5Btn"
+  <button id="connectMt5Btn" onclick="connectMT5()"
     type="button"
-    disabled
+    
     style="width:100%;padding:15px;border:0;
     border-radius:12px;color:white;
     background:linear-gradient(90deg,#ff3f83,#bb35ff);
@@ -745,7 +745,49 @@ if (tg) {
   tg.expand();
 }
 
-const telegramInitData = tg?.initData || "";
+
+async function connectMT5() {
+  const status = document.getElementById("pairStatus");
+  const btn = document.getElementById("connectMt5Btn");
+
+  if (!telegramInitData) {
+    status.textContent = "Please open this app inside Telegram.";
+    return;
+  }
+
+  btn.disabled = true;
+  status.textContent = "Generating secure pairing code...";
+
+  try {
+    const response = await fetch(
+      API_BASE + "/api/pair/start",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-telegram-init-data": telegramInitData
+        },
+        body: JSON.stringify({})
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Pairing failed");
+    }
+
+    document.getElementById("pairingCode").value = data.code;
+    status.textContent =
+      "Pairing code generated. Expires in 5 minutes.";
+  } catch (error) {
+    status.textContent = "Error: " + error.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+  const telegramInitData = tg?.initData || "";
 </script>
 
 </body>
