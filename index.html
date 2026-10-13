@@ -703,8 +703,7 @@ return;
 
 async function refresh(){
   const status = document.getElementById("status");
-  if (status) status.textContent = "MT5 NOT CONNECTED";
-  return;
+ 
 
   try {
     const response = await fetch(
