@@ -705,17 +705,35 @@ async function refresh(){
   const status = document.getElementById("status");
  
 
-  try {
-    const response = await fetch(
-  API_BASE + "/api/status?t=" + Date.now(),
-  { cache: "no-store" }
-);
-    const data = await response.json();
+ try {
+  if (!telegramInitData) {
+    status.textContent = "Open inside Telegram";
+    return;
+  }
 
-    if (!data.connected) {
-  status.textContent = "MT5 DISCONNECTED";
-  return;
-}
+  const response = await fetch(API_BASE + "/api/accounts", {
+    headers: {
+      "x-telegram-init-data": telegramInitData
+    },
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error("HTTP " + response.status);
+  }
+
+  const result = await response.json();
+  const account = result.accounts?.[0];
+
+  if (!account || !account.status) {
+    status.textContent = "MT5 DISCONNECTED";
+    return;
+  }
+
+  const data = {
+    ...account.status,
+    connected: true
+  };
 
 const s = data;
 
