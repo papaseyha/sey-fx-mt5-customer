@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEY FX Customer</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;color:#fff;font-family:Arial,sans-serif;background:radial-gradient(ellipse at top left,#481334,#170b1c 60%,#09060d);min-height:100vh}
+main{max-width:650px;margin:auto;padding:20px 15px 45px}
+header,.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:12px}
+.fx{padding:13px;border-radius:14px;background:linear-gradient(135deg,#ff3985,#a72eff);font-weight:bold}
+small,.muted{color:#ac97ae;font-size:12px}
+h2{font-size:18px;margin:0 0 15px}
+h1{font-size:38px;line-height:1.1;margin:20px 0}
+.gradient{background:linear-gradient(90deg,#ff4288,#bd32ff);background-clip:text;color:transparent}
+.card{background:linear-gradient(135deg,rgba(64,31,62,.8),rgba(31,19,38,.92));border:1px solid #60415d;border-radius:23px;padding:20px;margin-top:16px;box-shadow:0 12px 30px #0002}
+.tag{display:inline-block;border:1px solid #a53565;color:#ff7ca9;padding:9px 13px;border-radius:25px;font-size:11px;font-weight:bold}
+.live{color:#30df94;border:1px solid #267d5c;border-radius:22px;padding:8px 12px;font-size:12px}
+p{color:#bbaabc;line-height:1.6;font-size:14px}
+button{border:0;border-radius:14px;padding:14px 17px;color:white;font-weight:bold;font-size:14px;cursor:pointer}
+.primary{background:linear-gradient(100deg,#fa4386,#bb2dff)}
+.secondary{background:#39283d;border:1px solid #654c65}
+.green{background:linear-gradient(90deg,#18d478,#08a967)}
+.red{background:linear-gradient(90deg,#ff526d,#c62a4c)}
+.buttons{display:flex;gap:10px;flex-wrap:wrap}
+.buttons button{flex:1}
+.stats,.three,.two{display:grid;gap:10px}
+.stats,.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.value{font-size:20px;font-weight:bold;margin:8px 0}
+.tile{background:#ffffff06;border:1px solid #ffffff13;border-radius:15px;padding:15px;text-align:center}
+input{width:100%;background:#241a2c;color:white;border:1px solid #795175;border-radius:12px;padding:15px;font-size:15px;margin:10px 0}
+.note{font-size:12px;color:#bca7bc}
+footer{text-align:center;color:#826e86;font-size:11px;margin-top:25px}
+@media(max-width:380px){.card{padding:15px}.value{font-size:16px}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <div class="logo"><div class="fx">FX</div>
+ <div><b>SEY FX</b><br><small>MT5 CUSTOMER CONTROL</small></div></div>
+ <span class="live" id="connection">● NOT CONNECTED</span>
+</header>
+
+<section class="card">
+ <span class="tag">◉ AUTO TRADING SYSTEM</span>
+ <h1>Trade with<br><span class="gradient">confidence.</span></h1>
+ <p>Connect your MT5 account and monitor your trading EA from one clean dashboard.</p>
+ <div class="buttons">
+  <button class="primary" onclick="document.getElementById('connect').scrollIntoView({behavior:'smooth'})">Connect MT5</button>
+  <button class="secondary" onclick="showInfo()">Refresh Status</button>
+ </div>
+ <hr style="border:0;border-top:1px solid #60415d;margin:23px 0">
+ <div class="stats">
+  <div><b>24/7</b><br><small>MONITORING</small></div>
+  <div><b>MT5</b><br><small>PLATFORM</small></div>
+  <div><b>EA</b><br><small>CONTROL</small></div>
+ </div>
+</section>
+
+<section class="card" id="connect">
+ <h2>🔗 Connect Your MT5</h2>
+ <p>Connect your own MT5 using a secure pairing code from the SEY FX Bridge.</p>
+ <label class="muted">PAIRING CODE</label>
+ <input id="pairing" placeholder="XXXX-XXXX-XXXX" autocomplete="off">
+ <button class="primary" style="width:100%" onclick="connectMT5()">CONNECT MT5</button>
+ <p class="note">Demo only. Secure account pairing will be enabled after the customer backend is ready.</p>
+</section>
+
+<section class="card">
+ <div class="between"><b>⚡ XAUUSD · PROFIT DAY</b><span class="live">DEMO</span></div>
+ <h1 style="font-size:30px">$--</h1>
+ <small>MT5 NOT CONNECTED</small>
+</section>
+
+<div class="two">
+ <section class="card">
+  <h2>Account Overview</h2>
+  <small>Balance / Equity / Positions</small>
+  <div class="value">-- / -- / --</div>
+  <svg viewBox="0 0 200 55" width="100%">
+   <path d="M0 43 Q30 38 45 26 T80 29 T120 20 T160 15 T200 8"
+   stroke="#e83bb7" fill="none" stroke-width="3"/>
+  </svg>
+ </section>
+ <section class="card">
+  <h2>Account Status</h2>
+  <p>Connection: Offline</p>
+  <p>EA: Not connected</p>
+ </section>
+</div>
+
+<section class="card">
+ <h2>Execution Statistics</h2>
+ <div class="three">
+  <div class="tile"><div class="value">--</div><small>FLOATING P/L</small></div>
+  <div class="tile"><div class="value">--</div><small>PROFIT TARGET</small></div>
+  <div class="tile"><div class="value">--</div><small>RE-ENTRY PIPS</small></div>
+ </div>
+</section>
+
+<section class="card">
+ <h2>Bot Control</h2>
+ <p>MT5 NOT CONNECTED</p>
+ <div class="buttons">
+  <button class="green" onclick="showInfo()">▶ BOT ON</button>
+  <button class="red" onclick="showInfo()">■ BOT OFF</button>
+ </div>
+</section>
+
+<footer>SEY FX · MT5 Customer Control</footer>
+</main>
+<script>
+if(window.Telegram?.WebApp){
+ Telegram.WebApp.ready();
+ Telegram.WebApp.expand();
+}
+function showInfo(){
+ alert("Demo mode: Secure MT5 backend is not connected yet.");
+}
+function connectMT5(){
+ alert("Pairing will be available after the secure customer backend is installed. Do not enter passwords or real credentials.");
+}
+</script>
+</body>
+</html>
