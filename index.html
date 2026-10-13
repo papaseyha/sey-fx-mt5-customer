@@ -788,7 +788,11 @@ async function connectMT5() {
   }
 }
 
-  const telegramInitData = tg?.initData || "";
+
+const telegramInitData = tg?.initData || "";
+console.log("Telegram available:", !!tg);
+console.log("InitData available:", !!telegramInitData);
+  
 </script>
 
 </body>
