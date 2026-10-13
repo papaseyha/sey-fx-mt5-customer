@@ -125,9 +125,37 @@ const API_URL = "https://sey-fx-customer-backend.onrender.com";
 function showInfo(){
  alert("Demo mode: Secure MT5 backend is not connected yet.");
 }
-function connectMT5(){
- alert("Pairing will be available after the secure customer backend is installed. Do not enter passwords or real credentials.");
+
+async function connectMT5() {
+  const initData = window.Telegram?.WebApp?.initData;
+
+  if (!initData) {
+    alert("Please open this app inside Telegram.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      API_URL + "/api/pair/start",
+      {
+        method: "POST",
+        headers: {
+          "x-telegram-init-data": initData
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Connection failed");
+    }
+
+    alert(
+      "Your pairing code: " + data.code +
+      "\nValid for 5 minutes."
+    );
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
 }
-</script>
-</body>
-</html>
