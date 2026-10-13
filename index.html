@@ -116,7 +116,9 @@ footer{text-align:center;color:#826e86;font-size:11px;margin-top:25px}
 <footer>SEY FX · MT5 Customer Control</footer>
 </main>
 <script>
-if(window.Telegram?.WebApp){
+
+const API_URL = "https://sey-fx-customer-backend.onrender.com";
+  if(window.Telegram?.WebApp){
  Telegram.WebApp.ready();
  Telegram.WebApp.expand();
 }
