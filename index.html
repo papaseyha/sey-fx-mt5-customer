@@ -666,40 +666,76 @@ svg{
 <script>
   const API_BASE = "https://sey-fx-customer-backend-1.onrender.com";
 
-async function bot(on){
-  alert("Customer MT5 control is not enabled yet.");
-return;
- const status = document.getElementById("status");
+
+async function bot(on) {
+  const status = document.getElementById("status");
+
+  if (!telegramInitData) {
+    status.textContent = "Open inside Telegram";
+    return;
+  }
+
+  status.textContent = "Checking MT5 account...";
 
   try {
+    const accountsResponse = await fetch(
+      API_BASE + "/api/accounts",
+      {
+        headers: {
+          "x-telegram-init-data": telegramInitData
+        }
+      }
+    );
+
+    if (!accountsResponse.ok) {
+      throw new Error("Account verification failed");
+    }
+
+    const accountsData = await accountsResponse.json();
+    const accounts = accountsData.accounts || [];
+
+    if (accounts.length !== 1) {
+      status.textContent =
+        "Please connect exactly one MT5 account";
+      return;
+    }
+
+    const accountId = accounts[0].accountId;
+
     status.textContent = on
       ? "Sending BOT ON..."
       : "Sending BOT OFF...";
 
-    const response = await fetch(API_BASE + "/api/command", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        action: on ? "bot_on" : "bot_off"
-      })
-    });
+    const response = await fetch(
+      API_BASE + "/api/command",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-telegram-init-data": telegramInitData
+        },
+        body: JSON.stringify({
+          accountId: accountId,
+          action: on ? "bot_on" : "bot_off"
+        })
+      }
+    );
 
     const data = await response.json();
 
-    if (data.ok) {
-      status.textContent = on
-        ? "BOT ON • Command sent"
-        : "BOT OFF • Command sent";
-    } else {
-      status.textContent = "Command failed";
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Command failed");
     }
 
+    status.textContent = on
+      ? "BOT ON command queued"
+      : "BOT OFF command queued";
+
   } catch (error) {
-    status.textContent = "Bridge connection error";
+    status.textContent = "Error: " + error.message;
   }
 }
+
 
 async function refresh(){
   const status = document.getElementById("status");
