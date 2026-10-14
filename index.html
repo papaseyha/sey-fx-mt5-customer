@@ -468,9 +468,9 @@ svg{
 
   </div>
 
-  <div class="live">
-    ● Offline
-  </div>
+  <div class="live" id="liveStatus">
+  ● Offline
+</div>
 
 </section>
 
@@ -740,7 +740,12 @@ const s = data;
     status.textContent = s.connected
       ? "MT5 CONNECTED"
       : "MT5 DISCONNECTED";
-
+const liveStatus = document.getElementById("liveStatus");
+if (liveStatus) {
+  liveStatus.textContent = s.connected
+    ? "● Online"
+    : "● Offline";
+}
     console.log("MT5 Status:", s);
   document.getElementById("balance").textContent =
   "$" + Number(s.balance || 0).toFixed(2);
