@@ -782,9 +782,7 @@ status.textContent = s.botEnabled === true
   ? "🟢 BOT ON"
   : s.botEnabled === false
   ? "🔴 BOT OFF"
-  : s.connected
-  ? "🟢 MT5 CONNECTED"
-  : "🔴 MT5 DISCONNECTED";
+  : "⚪ BOT STATUS UNKNOWN";
 
 const liveStatus = document.getElementById("liveStatus");
 if (liveStatus) {
