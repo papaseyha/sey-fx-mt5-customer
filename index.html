@@ -772,7 +772,7 @@ async function refresh(){
   const data = {
   ...account.status,
   connected: true,
-  botEnabled: account.botEnabled
+  botEnabled: account.status.botEnabled
 };
 
 const s = data;
@@ -790,6 +790,13 @@ if (liveStatus) {
     ? "● Online"
     : "● Offline";
 }
+  const goldStatus = document.getElementById("goldStatus");
+
+if (goldStatus) {
+  goldStatus.textContent = s.connected
+    ? "● MT5 CONNECTED"
+    : "● MT5 NOT CONNECTED";
+} 
     console.log("MT5 Status:", s);
   document.getElementById("balance").textContent =
   "$" + Number(s.balance || 0).toFixed(2);
