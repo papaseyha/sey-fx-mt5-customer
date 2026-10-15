@@ -770,9 +770,10 @@ async function refresh(){
   }
 
   const data = {
-    ...account.status,
-    connected: true
-  };
+  ...account.status,
+  connected: true,
+  botEnabled: account.botEnabled
+};
 
 const s = data;
 
