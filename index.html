@@ -773,13 +773,15 @@ async function refresh(){
 
 const s = data;
 
-    status.textContent = !s.connected
-  ? "MT5 DISCONNECTED"
-  : s.botEnabled === true
+    if (!status.textContent.includes("command queued")) {
+  status.textContent = !s.connected
+    ? "MT5 DISCONNECTED"
+    : s.botEnabled === true
     ? "🟢 BOT ON"
     : s.botEnabled === false
-      ? "🔴 BOT OFF"
-      : "MT5 CONNECTED";
+    ? "🔴 BOT OFF"
+    : "MT5 CONNECTED";
+}
 const liveStatus = document.getElementById("liveStatus");
 if (liveStatus) {
   liveStatus.textContent = s.connected
@@ -814,7 +816,7 @@ if (profitDayEl) {
 refresh();
 setInterval(() => {
   refresh();
-}, 1000);
+}, 5000);
 
 const tg = window.Telegram?.WebApp;
 if (tg) {
