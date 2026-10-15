@@ -773,9 +773,13 @@ async function refresh(){
 
 const s = data;
 
-    status.textContent = s.connected
-      ? "MT5 CONNECTED"
-      : "MT5 DISCONNECTED";
+    status.textContent = !s.connected
+  ? "MT5 DISCONNECTED"
+  : s.botEnabled === true
+    ? "🟢 BOT ON"
+    : s.botEnabled === false
+      ? "🔴 BOT OFF"
+      : "MT5 CONNECTED";
 const liveStatus = document.getElementById("liveStatus");
 if (liveStatus) {
   liveStatus.textContent = s.connected
