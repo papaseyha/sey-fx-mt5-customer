@@ -815,14 +815,15 @@ if (profitDayEl) {
 }
 
   
-    
-
+const tg = window.Telegram?.WebApp;    
+const telegramInitData = tg?.initData || "";
+console.log("Telegram available:", !!tg);
+console.log("InitData available:", !!telegramInitData);
 refresh();
 setInterval(() => {
   refresh();
 }, 5000);
-
-const tg = window.Telegram?.WebApp;
+  
 if (tg) {
   tg.ready();
   tg.expand();
@@ -869,11 +870,6 @@ async function connectMT5() {
     btn.disabled = false;
   }
 }
-
-
-const telegramInitData = tg?.initData || "";
-console.log("Telegram available:", !!tg);
-console.log("InitData available:", !!telegramInitData);
   
 </script>
 
