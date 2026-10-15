@@ -727,9 +727,12 @@ async function bot(on) {
       throw new Error(data.error || "Command failed");
     }
 
-    status.textContent = on
-      ? "BOT ON command queued"
-      : "BOT OFF command queued";
+    
+status.textContent = on
+  ? "Waiting for MT5 to confirm BOT ON..."
+  : "Waiting for MT5 to confirm BOT OFF...";
+
+await refresh();
 
   } catch (error) {
     status.textContent = "Error: " + error.message;
