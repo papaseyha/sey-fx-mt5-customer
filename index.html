@@ -778,13 +778,13 @@ async function refresh(){
 const s = data;
 
     
-status.textContent = !s.connected
-  ? "MT5 DISCONNECTED"
-  : s.botEnabled === true
+status.textContent = s.botEnabled === true
   ? "🟢 BOT ON"
   : s.botEnabled === false
   ? "🔴 BOT OFF"
-  : "MT5 CONNECTED";
+  : s.connected
+  ? "🟢 MT5 CONNECTED"
+  : "🔴 MT5 DISCONNECTED";
 
 const liveStatus = document.getElementById("liveStatus");
 if (liveStatus) {
