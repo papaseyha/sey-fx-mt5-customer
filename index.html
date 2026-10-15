@@ -773,7 +773,7 @@ async function refresh(){
   const data = {
   ...account.status,
   connected: true,
-botEnabled: account.botEnabled
+botEnabled: account.status?.botEnabled
   };
 const s = data;
 
