@@ -782,6 +782,12 @@ botEnabled: account.botEnabled ?? account.status?.botEnabled
   };
 const s = data;
 
+const pairStatus = document.getElementById("pairStatus");
+
+if (pairStatus) {
+  pairStatus.textContent = "✅ MT5 CONNECTED";
+}
+
     
 status.textContent = s.botEnabled === true
   ? "🟢 BOT ON"
