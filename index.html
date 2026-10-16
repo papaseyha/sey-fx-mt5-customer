@@ -600,7 +600,7 @@ svg{
     Connect your MT5 account using
     a secure pairing code.
   </p>
-
+<div id="pairingForm">
   <label for="pairingCode">PAIRING CODE</label>
 
   <input
@@ -625,7 +625,7 @@ svg{
   CONNECT MT5
 </button>
 
-
+</div>
   <p class="muted" id="pairStatus">
     MT5 NOT CONNECTED — Pairing will be available soon.
   </p>
@@ -787,7 +787,11 @@ const pairStatus = document.getElementById("pairStatus");
 if (pairStatus) {
   pairStatus.textContent = "✅ MT5 CONNECTED";
 }
+const pairingForm = document.getElementById("pairingForm");
 
+if (pairingForm) {
+  pairingForm.style.display = "none";
+}
     
 status.textContent = s.botEnabled === true
   ? "🟢 BOT ON"
