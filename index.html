@@ -626,9 +626,20 @@ svg{
 </button>
 
 </div>
-  <p class="muted" id="pairStatus">
-    MT5 NOT CONNECTED — Pairing will be available soon.
-  </p>
+  
+<p class="muted" id="pairStatus">
+  MT5 NOT CONNECTED
+</p>
+
+<button
+  id="disconnectMt5Btn"
+  type="button"
+  onclick="disconnectMT5()"
+  style="display:none;width:100%;margin-top:12px;padding:14px;background:#dc3545;color:white;border:0;border-radius:12px;"
+>
+  DISCONNECT MT5
+</button>
+
 </section>
 
 <!-- BOT CONTROL -->
@@ -763,12 +774,25 @@ async function refresh(){
 
   const result = await response.json();
   console.log("SEY FX API ACCOUNTS:", result);
-  const account = result.accounts?.[0];
+  
+const account = result.accounts?.[0];
 
-  if (!account) {
+const disconnectBtn = document.getElementById("disconnectMt5Btn");
+const pairingForm = document.getElementById("pairingForm");
+
+if (!account) {
+  if (disconnectBtn) {
+    disconnectBtn.style.display = "none";
+  }
+
+  if (pairingForm) {
+    pairingForm.style.display = "block";
+  }
+
   status.textContent = "NO MT5 ACCOUNT FOUND";
   return;
 }
+
 
 if (!account.status) {
   status.textContent = "MT5 ACCOUNT FOUND - WAITING FOR STATUS";
@@ -787,10 +811,13 @@ const pairStatus = document.getElementById("pairStatus");
 if (pairStatus) {
   pairStatus.textContent = "✅ MT5 CONNECTED";
 }
-const pairingForm = document.getElementById("pairingForm");
 
 if (pairingForm) {
   pairingForm.style.display = "none";
+}
+
+if (disconnectBtn) {
+  disconnectBtn.style.display = "block";
 }
     
 status.textContent = s.botEnabled === true
@@ -888,6 +915,60 @@ async function connectMT5() {
     status.textContent = "Error: " + error.message;
   } finally {
     btn.disabled = false;
+  }
+}
+
+async function disconnectMT5() {
+  const status = document.getElementById("pairStatus");
+
+  if (!telegramInitData) {
+    status.textContent = "Please open inside Telegram.";
+    return;
+  }
+
+  if (!confirm("Disconnect your MT5 account?")) return;
+
+  try {
+    const accountsResponse = await fetch(API_BASE + "/api/accounts", {
+      headers: {
+        "x-telegram-init-data": telegramInitData
+      }
+    });
+
+    if (!accountsResponse.ok) {
+      throw new Error("Cannot load MT5 accounts");
+    }
+
+    const data = await accountsResponse.json();
+    const accounts = data.accounts || [];
+
+    if (accounts.length !== 1) {
+      throw new Error("Expected exactly one MT5 account. Found: " + accounts.length);
+    }
+
+    const response = await fetch(API_BASE + "/api/accounts/disconnect", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-telegram-init-data": telegramInitData
+      },
+      body: JSON.stringify({
+        accountId: String(accounts[0].accountId)
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Disconnect failed");
+    }
+
+    status.textContent = "MT5 disconnected. Connect your new account.";
+    document.getElementById("disconnectMt5Btn").style.display = "none";
+
+    await refresh();
+  } catch (error) {
+    status.textContent = "Error: " + error.message;
   }
 }
   
