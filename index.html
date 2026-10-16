@@ -765,10 +765,15 @@ async function refresh(){
   console.log("SEY FX API ACCOUNTS:", result);
   const account = result.accounts?.[0];
 
-  if (!account || !account.status) {
-    status.textContent = "MT5 DISCONNECTED";
-    return;
-  }
+  if (!account) {
+  status.textContent = "NO MT5 ACCOUNT FOUND";
+  return;
+}
+
+if (!account.status) {
+  status.textContent = "MT5 ACCOUNT FOUND - WAITING FOR STATUS";
+  return;
+}
 
   const data = {
   ...account.status,
