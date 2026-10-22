@@ -12,6 +12,8 @@
 /* Compact section headings, without changing MT5 controls */
 .section-head h2{font-size:17px;letter-spacing:-.2px}
 .section-head{margin-bottom:10px}
+.signal-record{padding:12px 0;border-bottom:1px solid #ffffff17;display:flex;flex-direction:column;gap:7px;overflow-wrap:anywhere}
+.signal-record:last-child{border-bottom:0}
 </style>
 
 <style id="seyfx-redesign">
@@ -137,6 +139,7 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
   <div class="signal-history" aria-label="Signal History">
     <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
     <div class="card signal-history-card">
+      <div id="signalHistoryList" aria-live="polite"></div>
       <div class="signal-history-empty" id="signalHistoryEmpty">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
         <strong>No signals yet</strong>
@@ -145,7 +148,20 @@ main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
     </div>
   </div>
 </section>
-<section id="settings" class="section app-page"><div class="section-head"><h2>Bot Settings</h2><span class="small">Control your EA</span></div><div class="card"><div class="form-row"><div class="form-group"><label for="profitInput">Pair Profit Target ($)</label><input class="field" id="profitInput" type="number" min="0.01" max="100000" step="0.01" inputmode="decimal" placeholder="e.g. 7"><button class="save" type="button" onclick="saveProfit()">SAVE PROFIT</button></div><div class="form-group"><label for="gridInput">Re-entry Distance (points)</label><input class="field" id="gridInput" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 1000"><button class="save" type="button" onclick="saveGrid()">SAVE DISTANCE</button></div></div><p class="setting-note">Values are sent to the MT5 Bridge. A successful request means queued, not yet confirmed by the EA. Distance is in MT5 points.</p><div class="feedback" id="settingStatus"></div></div></section>
+<section id="settings" class="section app-page">
+  <div class="section-head"><h2>Bot Settings</h2><span class="small">Control your EA</span></div>
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label for="profitInput">Pair Profit Target ($)</label><input class="field" id="profitInput" type="number" min="0.01" max="100000" step="0.01" inputmode="decimal" placeholder="e.g. 5"><button class="save" type="button" onclick="saveProfit()">SAVE PROFIT</button></div>
+      <div class="form-group"><label for="gridInput">Re-entry Distance (points)</label><input class="field" id="gridInput" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 5000"><button class="save" type="button" onclick="saveGrid()">SAVE DISTANCE</button></div>
+      <div class="form-group"><label for="lotInput">Start Lot</label><input class="field" id="lotInput" type="number" min="0.01" max="100" step="0.01" inputmode="decimal" placeholder="e.g. 0.02"><button class="save" type="button" onclick="saveLot()">SAVE LOT</button></div>
+      <div class="form-group"><label for="maxOrdersInput">Max Orders (Total)</label><input class="field" id="maxOrdersInput" type="number" min="1" max="1000" step="1" inputmode="numeric" placeholder="e.g. 20"><button class="save" type="button" onclick="saveMaxOrders()">SAVE MAX ORDERS</button></div>
+    </div>
+    <p class="setting-note">Start Lot applies to new orders; subsequent lots increase by the EA's configured increment. Max Orders counts BUY + SELL together. Broker lot rules, EA Max Lot, and safety limits still apply. New Lot / Max Orders commands require the backend update before they can be used.</p>
+    <p class="setting-note">A successful request means queued, not yet confirmed by the EA. Test on a demo account first.</p>
+    <div class="feedback" id="settingStatus" role="status" aria-live="polite"></div>
+  </div>
+</section>
 <section id="history" class="section app-page"><div class="section-head"><h2>Trading History</h2><span class="small">MT5 records</span></div><div class="card"><div class="quote"><div class="quote-icon">◷</div><div class="quote-info"><div class="name">Profit today</div><div class="value gold" id="historyProfitDay">—</div></div></div><p class="info">Full closed-trade history is not available from the current Mini App API. This page shows today's reported profit only; no sample trades are presented as real records.</p><button class="save" type="button" onclick="refresh()">REFRESH PROFIT</button></div></section>
 <section id="connect-mt5" class="section app-page"><div class="section-head"><h2>Connect MT5</h2><span class="small">Account pairing</span></div><div class="card"><div class="connection-status" id="pairStatus">Checking MT5 connection...</div><div id="pairingForm"><p class="info">Generate a pairing code, then enter it in your MT5 Bridge EA. Code expires after 5 minutes. Keep it private.</p><label class="pair-label" for="pairingCode">PAIRING CODE</label><input class="field pair-code" id="pairingCode" type="text" placeholder="XXXX-XXXX-XXXX" readonly autocomplete="off"><button class="primary" id="connectMt5Btn" type="button" onclick="connectMT5()">GENERATE PAIRING CODE</button></div><button class="danger hidden" id="disconnectMt5Btn" type="button" onclick="disconnectMT5()">DISCONNECT MT5</button></div></section>
 <div class="card app-page active-page" id="system-status"><div class="section-head" style="margin:0 0 8px"><h2 style="font-size:15px">System Status</h2><button type="button" class="save" style="width:auto;margin:0;padding:8px 12px" onclick="refresh()">REFRESH</button></div><div class="info" id="status" role="status">Checking MT5 connection...</div></div>
@@ -176,9 +192,11 @@ async function accounts(){const data=await request('/api/accounts');return Array
 async function singleAccount(){const list=await accounts();if(list.length!==1)throw Error('Please connect exactly one MT5 account');return list[0];}
 async function refresh(){if(refreshing)return;refreshing=true;try{const list=await accounts();lastAccount=list.length===1?list[0]:null;if(!lastAccount){setConnected(false);clearData();el('status').textContent=list.length?'Multiple MT5 accounts found; expected one.':'NO MT5 ACCOUNT FOUND';return;}setConnected(true);if(!lastAccount.status){clearData();el('status').textContent='MT5 ACCOUNT FOUND — WAITING FOR STATUS';el('updatedAt').textContent='Waiting for Bridge';return;}const s=lastAccount.status;el('balance').textContent=money(s.balance);el('equity').textContent=money(s.equity);el('positions').textContent=s.positions??'—';const fl=Number(s.floatingPL);el('floating').textContent=money(s.floatingPL);el('floating').className='number '+(Number.isFinite(fl)?fl<0?'red':'green':'');el('profitday').textContent=money(s.profitday??s.profitDay);el('profitday2').textContent=money(s.profitday??s.profitDay);el('historyProfitDay').textContent=money(s.profitday??s.profitDay);const enabled=lastAccount.botEnabled??s.botEnabled;el('botBadge').textContent=enabled===true?'● BOT ON':enabled===false?'● BOT OFF':'BOT UNKNOWN';el('botBadge').style.color=enabled===true?'var(--green)':enabled===false?'var(--red)':'var(--muted)';el('status').textContent=enabled===true?'🟢 BOT ON':enabled===false?'🔴 BOT OFF':'⚪ BOT STATUS UNKNOWN';el('updatedAt').textContent='Updated '+new Date().toLocaleTimeString();}catch(e){el('status').textContent='Connection error: '+e.message;el('updatedAt').textContent='Update failed';}finally{refreshing=false;}}
 async function bot(on){try{el('status').textContent=on?'Sending BOT ON...':'Sending BOT OFF...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action:on?'bot_on':'bot_off'})});if(!data.ok)throw Error(data.error||'Command failed');el('status').textContent='Command queued — waiting for MT5 confirmation';setTimeout(refresh,1200);}catch(e){el('status').textContent='Error: '+e.message;}}
-async function saveSetting(action,id){const input=el(id);if(input.value.trim()==='')return alert('Enter a value first');const value=Number(input.value);if(!Number.isFinite(value)||value<=0||(action==='set_profit'&&value>100000)||(action==='set_grid'&&(!Number.isInteger(value)||value>1000000)))return alert('Enter a valid value');const feedback=el('settingStatus');try{feedback.textContent='Sending setting...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action,value})});if(!data.ok)throw Error(data.error||'Save failed');feedback.textContent='✓ Setting queued. Check MT5 Experts log for confirmation.';}catch(e){feedback.textContent='Error: '+e.message;}}
+async function saveSetting(action,id){const input=el(id);if(input.value.trim()==='')return alert('Enter a value first');const value=Number(input.value);if(!Number.isFinite(value)||value<=0||(action==='set_profit'&&value>100000)||(action==='set_grid'&&(!Number.isInteger(value)||value>1000000))||(action==='set_lot'&&value>100)||(action==='set_max_orders'&&(!Number.isInteger(value)||value>1000)))return alert('Enter a valid value');const feedback=el('settingStatus');try{feedback.textContent='Sending setting...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action,value})});if(!data.ok)throw Error(data.error||'Save failed');feedback.textContent='✓ Setting queued. Check MT5 Experts log for confirmation.';}catch(e){feedback.textContent='Error: '+e.message;}}
 function saveProfit(){return saveSetting('set_profit','profitInput');}
 function saveGrid(){return saveSetting('set_grid','gridInput');}
+function saveLot(){return saveSetting('set_lot','lotInput');}
+function saveMaxOrders(){return saveSetting('set_max_orders','maxOrdersInput');}
 async function connectMT5(){const btn=el('connectMt5Btn');btn.disabled=true;try{el('pairStatus').textContent='Generating pairing code...';const data=await request('/api/pair/start',{method:'POST',body:JSON.stringify({})});if(!data.code)throw Error('Pairing code missing');el('pairingCode').value=data.code;el('pairStatus').textContent='Code generated. Expires in 5 minutes.';}catch(e){el('pairStatus').textContent='Error: '+e.message;}finally{btn.disabled=false;}}
 async function disconnectMT5(){if(!confirm('Disconnect your MT5 account? This does not automatically close open trades.'))return;const btn=el('disconnectMt5Btn');btn.disabled=true;try{const account=await singleAccount();await request('/api/accounts/disconnect',{method:'POST',body:JSON.stringify({accountId:String(account.accountId)})});setConnected(false);clearData();el('pairStatus').textContent='MT5 disconnected. You can pair another account.';el('status').textContent='MT5 disconnected';await refresh();}catch(e){el('pairStatus').textContent='Error: '+e.message;}finally{btn.disabled=false;}}
 // Independent XAUUSD M5 feed. Read-only; never sends trading commands.
@@ -202,6 +220,34 @@ async function refreshSignal(){
   }catch(err){signalReset('Market data unavailable: '+err.message);}
   finally{signalRefreshing=false;}
 }
+
+// Display only actual signals recorded by the authenticated backend.
+async function refreshSignalHistory(){
+  const list=el('signalHistoryList'), empty=el('signalHistoryEmpty');
+  if(!telegramInitData)return;
+  try{
+    const data=await request('/api/signals/history');
+    const signals=Array.isArray(data.signals)?data.signals:[];
+    list.replaceChildren();
+    empty.style.display=signals.length?'none':'';
+    if(!signals.length)return;
+    for(const item of signals){
+      if(!['BUY','SELL'].includes(String(item.side).toUpperCase()))continue;
+      const card=document.createElement('div');card.className='signal-record';
+      const title=document.createElement('strong');title.textContent=String(item.side).toUpperCase()+' · '+String(item.symbol||'XAUUSD')+' · '+String(item.timeframe||'M5');
+      title.style.color=String(item.side).toUpperCase()==='BUY'?'#3bd68a':'#ff6666';
+      const detail=document.createElement('div');detail.className='small';
+      const fmt=v=>v===null||v===undefined?'—':String(v);
+      detail.textContent='Entry: '+fmt(item.entry)+'  ·  TP: '+fmt(item.takeProfit)+'  ·  SL: '+fmt(item.stopLoss)+'  ·  Strength: '+fmt(item.strength);
+      const date=document.createElement('div');date.className='small';
+      const parsed=new Date(item.occurredAt);date.textContent=Number.isNaN(parsed.getTime())?'':parsed.toLocaleString();
+      card.append(title,detail,date);list.append(card);
+    }
+    if(!list.childElementCount)empty.style.display='';
+  }catch(e){list.replaceChildren();empty.style.display='';empty.querySelector('p').textContent='Signal history unavailable: '+e.message;}
+}
+refreshSignalHistory();setInterval(refreshSignalHistory,60000);
+
 refreshSignal();setInterval(refreshSignal,60000);
 refresh();setInterval(refresh,1500);
 </script>
