@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08090c">
 <title>SEY FX • Trading Control</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -14,20 +14,6 @@
 .section-head{margin-bottom:10px}
 .signal-record{padding:12px 0;border-bottom:1px solid #ffffff17;display:flex;flex-direction:column;gap:7px;overflow-wrap:anywhere}
 .signal-record:last-child{border-bottom:0}
-
-/* SEY FX mobile settings: single column to avoid WebView horizontal clipping */
-@media (max-width: 600px) {
-  #settings .form-row { display:grid; grid-template-columns:minmax(0,1fr) !important; gap:18px; width:100%; }
-  #settings .form-group { width:100%; min-width:0; max-width:100%; }
-  #settings .field, #settings .save { width:100%; max-width:100%; }
-  #settings .card { width:100%; max-width:100%; overflow:hidden; }
-  #settings .section-head { min-width:0; }
-  .header { min-width:0; gap:8px; }
-  .brand { min-width:0; }
-  .status-pill { flex-shrink:0; }
-}
-html, body { overflow-x:hidden !important; }
-#settings input.field { font-size:17px !important; -webkit-text-size-adjust:100%; }
 </style>
 
 <style id="seyfx-redesign">
@@ -169,7 +155,7 @@ button { max-width:100%; touch-action:manipulation; }
       <div class="signal-cell"><div class="label">Signal Strength</div><strong id="signalStrength">—</strong></div>
     </div>
     <div class="signal-source"><span class="dot" id="signalDot"></span><span id="signalSourceText">Connecting to market data...</span></div><div class="small" id="signalMarketDetails" style="margin-top:9px;line-height:1.5"></div>
-    <p class="setting-note">Read-only independent market feed. The backend currently provides candles and WAIT, not verified BUY/SELL entries, TP or SL. This feature never controls MT5 or the trading bot.</p>
+    <p class="setting-note">Read-only independent XAUUSD M5 analysis. BUY/SELL appears only when the backend returns a valid signal with Entry, TP and SL. Signals do not place MT5 trades automatically.</p>
   </div>
   <div class="signal-history" aria-label="Signal History">
     <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
@@ -227,7 +213,7 @@ async function accounts(){const data=await request('/api/accounts');return Array
 async function singleAccount(){const list=await accounts();if(list.length!==1)throw Error('Please connect exactly one MT5 account');return list[0];}
 async function refresh(){if(refreshing)return;refreshing=true;try{const list=await accounts();lastAccount=list.length===1?list[0]:null;if(!lastAccount){setConnected(false);clearData();el('status').textContent=list.length?'Multiple MT5 accounts found; expected one.':'NO MT5 ACCOUNT FOUND';return;}setConnected(true);if(!lastAccount.status){clearData();el('status').textContent='MT5 ACCOUNT FOUND — WAITING FOR STATUS';el('updatedAt').textContent='Waiting for Bridge';return;}const s=lastAccount.status;el('balance').textContent=money(s.balance);el('equity').textContent=money(s.equity);el('positions').textContent=s.positions??'—';const fl=Number(s.floatingPL);el('floating').textContent=money(s.floatingPL);el('floating').className='number '+(Number.isFinite(fl)?fl<0?'red':'green':'');el('profitday').textContent=money(s.profitday??s.profitDay);el('profitday2').textContent=money(s.profitday??s.profitDay);el('historyProfitDay').textContent=money(s.profitday??s.profitDay);const enabled=lastAccount.botEnabled??s.botEnabled;el('botBadge').textContent=enabled===true?'● BOT ON':enabled===false?'● BOT OFF':'BOT UNKNOWN';el('botBadge').style.color=enabled===true?'var(--green)':enabled===false?'var(--red)':'var(--muted)';el('status').textContent=enabled===true?'🟢 BOT ON':enabled===false?'🔴 BOT OFF':'⚪ BOT STATUS UNKNOWN';el('updatedAt').textContent='Updated '+new Date().toLocaleTimeString();}catch(e){el('status').textContent='Connection error: '+e.message;el('updatedAt').textContent='Update failed';}finally{refreshing=false;}}
 async function bot(on){try{el('status').textContent=on?'Sending BOT ON...':'Sending BOT OFF...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action:on?'bot_on':'bot_off'})});if(!data.ok)throw Error(data.error||'Command failed');el('status').textContent='Command queued — waiting for MT5 confirmation';setTimeout(refresh,1200);}catch(e){el('status').textContent='Error: '+e.message;}}
-async function saveSetting(action,id){const input=el(id);if(input.value.trim()==='')return alert('Enter a value first');const value=Number(input.value);if(!Number.isFinite(value)||value<=0||(action==='set_profit'&&value>100000)||(action==='set_grid'&&(!Number.isInteger(value)||value>1000000))||(action==='set_lot'&&value>100)||(action==='set_max_orders'&&(!Number.isInteger(value)||value>200)))return alert('Enter a valid value');const feedback=el('settingStatus');try{feedback.textContent='Sending setting...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action,value})});if(!data.ok)throw Error(data.error||'Save failed');feedback.textContent='✓ Setting queued. Check MT5 Experts log for confirmation.';}catch(e){feedback.textContent='Error: '+e.message;}}
+async function saveSetting(action,id){const input=el(id);if(input.value.trim()==='')return alert('Enter a value first');const value=Number(input.value);if(!Number.isFinite(value)||value<=0||(action==='set_profit'&&value>100000)||(action==='set_grid'&&(!Number.isInteger(value)||value>1000000))||(action==='set_lot'&&value>100)||(action==='set_max_orders'&&(!Number.isInteger(value)||value>1000)))return alert('Enter a valid value');const feedback=el('settingStatus');try{feedback.textContent='Sending setting...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action,value})});if(!data.ok)throw Error(data.error||'Save failed');feedback.textContent='✓ Setting queued. Check MT5 Experts log for confirmation.';}catch(e){feedback.textContent='Error: '+e.message;}}
 function saveProfit(){return saveSetting('set_profit','profitInput');}
 function saveGrid(){return saveSetting('set_grid','gridInput');}
 function saveLot(){return saveSetting('set_lot','lotInput');}
@@ -237,18 +223,37 @@ async function disconnectMT5(){if(!confirm('Disconnect your MT5 account? This do
 // Independent XAUUSD M5 feed. Read-only; never sends trading commands.
 let signalRefreshing=false;
 function signalPrice(value){const n=Number(value);return value!==null&&value!==undefined&&value!==''&&Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:3}):'—';}
-function signalReset(message){el('signalAction').textContent='WAIT';el('signalEntry').textContent='—';el('signalTP').textContent='—';el('signalSL').textContent='—';el('signalStrength').textContent='—';el('signalSourceText').textContent=message;el('signalMarketDetails').textContent='';el('signalDot').style.background='#777';}
+function signalReset(message){
+  const action=el('signalAction');
+  action.textContent='WAIT';
+  action.style.color='#f5c76b';action.style.borderColor='#f5c76b55';action.style.background='#f5c76b17';
+  el('signalEntry').textContent='—';el('signalTP').textContent='—';
+  el('signalSL').textContent='—';el('signalStrength').textContent='—';
+  el('signalSourceText').textContent=message;
+  el('signalMarketDetails').textContent='';el('signalDot').style.background='#777';
+}
+function validSignalNumber(v){return v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))&&Number(v)>0;}
 async function refreshSignal(){
   if(signalRefreshing||!telegramInitData)return;
   signalRefreshing=true;
   try{
     const data=await request('/api/market/xauusd/m5');
     const candles=Array.isArray(data.candles)?data.candles:[];
-    if(!candles.length||!Number.isFinite(Number(data.lastClose)))throw Error('No valid market candles available');
-    const signal=String(data.signal||'WAIT').toUpperCase();
-    // Only WAIT is currently supported by the backend; don't infer entry/TP/SL from candles.
-    el('signalAction').textContent='WAIT';
-    el('signalEntry').textContent='—';el('signalTP').textContent='—';el('signalSL').textContent='—';el('signalStrength').textContent='—';
+    if(!candles.length||!validSignalNumber(data.lastClose))throw Error('No valid market candles available');
+    const side=String(data.signal||'WAIT').toUpperCase();
+    const active=data.signalActive===true && (side==='BUY'||side==='SELL') &&
+      validSignalNumber(data.entry) && validSignalNumber(data.takeProfit) && validSignalNumber(data.stopLoss) &&
+      (side==='BUY'? Number(data.stopLoss)<Number(data.entry)&&Number(data.entry)<Number(data.takeProfit):
+        Number(data.takeProfit)<Number(data.entry)&&Number(data.entry)<Number(data.stopLoss));
+    const action=el('signalAction');
+    action.textContent=active?side:'WAIT';
+    const color=active?(side==='BUY'?'#42d595':'#ff5260'):'#f5c76b';
+    action.style.color=color;action.style.borderColor=color+'88';action.style.background=color+'17';
+    el('signalEntry').textContent=active?signalPrice(data.entry):'—';
+    el('signalTP').textContent=active?signalPrice(data.takeProfit):'—';
+    el('signalSL').textContent=active?signalPrice(data.stopLoss):'—';
+    const strength=Number(data.strength);
+    el('signalStrength').textContent=active&&data.strength!==null&&data.strength!==undefined&&Number.isFinite(strength)&&strength>=0&&strength<=100?Math.round(strength)+'%':'—';
     el('signalSourceText').textContent='Market data connected · '+String(data.source||'Market feed');
     el('signalMarketDetails').textContent='Last XAUUSD price: '+signalPrice(data.lastClose)+' · Latest M5 candle: '+String(data.lastCandleTime||'Unknown')+(data.cached?' · Cached':'');
     el('signalDot').style.background='var(--green)';
