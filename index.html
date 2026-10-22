@@ -7,31 +7,35 @@
 <title>SEY FX Trading Control</title>
 
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#08070d;
-  --panel:rgba(31,20,38,.76);
-  --line:rgba(255,255,255,.13);
-  --text:#fff;
-  --muted:#b7aabd;
-  --pink:#ff3f73;
-  --violet:#b94cff;
-  --green:#42f59b;
+
+:root {
+  color-scheme: dark;
+  --bg: #08090c;
+  --panel: rgba(25, 26, 31, .94);
+  --line: rgba(255, 255, 255, .10);
+  --text: #ffffff;
+  --muted: #a1a1aa;
+  --pink: #ff2638;
+  --violet: #c8102e;
+  --green: #22c55e;
 }
+
 
 *{box-sizing:border-box}
 
-body{
-  margin:0;
-    padding-top:85px;
-    color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+body {
+  margin: 0;
+  padding-top: 85px;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at 10% 0%,#4c153f 0,transparent 38%),
-    radial-gradient(circle at 90% 20%,#64152f 0,transparent 34%),
-    linear-gradient(145deg,#09070e,#1b0c1b 55%,#09070e);
-  min-height:100vh;
+    radial-gradient(circle at 10% 0%, #351016 0, transparent 38%),
+    radial-gradient(circle at 90% 20%, #240b10 0, transparent 34%),
+    linear-gradient(145deg, #08090c, #141519 55%, #08090c);
+  min-height: 100vh;
 }
+
 
 main{
   max-width:620px;
@@ -54,16 +58,21 @@ nav{
   gap:8px;
 }
 
-.logo{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  display:grid;
-  place-items:center;
-  font-size:12px;
-  font-weight:950;
-  background:linear-gradient(135deg,#ff3f73,#9b3cff);
+
+.logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 950;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff2638, #a50920);
+  box-shadow: 0 0 12px rgba(255,38,56,.25);
+  flex-shrink: 0;
 }
+
 
 .brand h1{
   font-size:16px;
