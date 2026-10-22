@@ -9,6 +9,9 @@
 <style>
 :root{color-scheme:dark;--bg:#08090c;--panel:#181a1f;--panel2:#202228;--gold:#ff3545;--gold2:#e62638;--text:#f8f9fb;--muted:#a3a5ad;--border:rgba(255,255,255,.105);--green:#42d595;--red:#ff5260}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 80% -5%,#302416 0,transparent 43%),var(--bg);color:var(--text);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}main{max-width:540px;margin:auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(98px + env(safe-area-inset-bottom))}.header{display:flex;align-items:center;justify-content:space-between;margin:5px 0 25px}.brand{display:flex;align-items:center;gap:10px}.mark{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid #f5d78b55;border-radius:9px;background:#171514;color:var(--gold);font-size:15px;font-weight:900;letter-spacing:-2px}.brand-name{font-size:21px;letter-spacing:1.5px;font-weight:800;color:var(--gold)}.brand-sub{font-size:9px;letter-spacing:1.4px;color:var(--muted);margin-top:2px}.status-pill{display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--border);border-radius:24px;font-size:11px;color:var(--muted);background:#ffffff06}.dot{height:7px;width:7px;border-radius:50%;background:#888}.status-pill.online .dot{background:var(--green);box-shadow:0 0 9px #4dd69a88}.status-pill.online{color:var(--green)}.card{background:linear-gradient(155deg,#24252b,#16171c 75%);border:1px solid var(--border);border-radius:22px;padding:19px;margin-bottom:16px;box-shadow:0 14px 30px #0004}.hero{position:relative;overflow:hidden;padding:24px 22px 16px}.hero:before{content:"";position:absolute;inset:-50% -20% auto auto;width:85%;height:110%;background:radial-gradient(circle,#b68c4140,transparent 65%);pointer-events:none}.eyebrow{font-size:12px;color:#c4bdb0;position:relative}.big-money{font-size:clamp(34px,8vw,48px);font-weight:800;color:#f5d78b;letter-spacing:-1.6px;margin:9px 0 7px;position:relative;font-variant-numeric:tabular-nums}.today{font-size:12px;color:var(--muted);position:relative}.today strong{color:var(--green);font-size:14px}.chart{width:100%;height:116px;margin-top:17px;display:block}.chart-note{text-align:center;color:var(--muted);font-size:10px;margin-top:0}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:2px 0 25px}.action{border:1px solid #e8c77c55;border-radius:30px;background:linear-gradient(160deg,#303036,#17181d);color:var(--gold);font-weight:800;letter-spacing:.5px;padding:16px 8px;box-shadow:inset 0 1px #ffffff19,0 0 16px #bd8b3220}.action span{font-size:17px;margin-right:6px}.action.off{color:#f4d3b7;border-color:#b78e6555}.action:active{transform:scale(.98)}.section-head{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}.section-head h2{font-size:19px;letter-spacing:-.3px;margin:0}.small{font-size:11px;color:var(--muted)}.quote{display:flex;align-items:center;justify-content:space-between;gap:12px}.quote-icon{height:42px;width:42px;border-radius:15px;background:#b98d3930;display:grid;place-items:center;color:var(--gold);font-size:23px;flex:none}.quote-info{flex:1;min-width:0}.quote-info .name{color:var(--muted);font-size:11px}.quote-info .value{font-size:18px;font-weight:800;margin-top:3px}.quote .right{text-align:right;font-size:11px;color:var(--green)}.section{scroll-margin-top:20px}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.metric{padding:16px;background:linear-gradient(155deg,#24252b,#18191f);border:1px solid var(--border);border-radius:18px;min-width:0}.metric .label{color:var(--muted);font-size:11px;margin-bottom:9px}.metric .number{font-size:20px;font-weight:800;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-group label{display:block;font-size:11px;color:var(--muted);margin:0 0 8px}.field{width:100%;min-width:0;border-radius:12px;border:1px solid #ffffff20;background:#0c0d10;color:var(--text);padding:12px 10px;outline:none}.field:focus{border-color:var(--gold2)}.save{width:100%;margin-top:9px;padding:12px 8px;border-radius:12px;border:1px solid #c9a45d66;background:#d2b36e22;color:var(--gold);font-weight:800;font-size:11px}.save:active{background:#d2b36e44}.setting-note{font-size:10px;color:var(--muted);margin:13px 0 0;line-height:1.5}.connection-status{padding:11px 12px;background:#0b0c10;border:1px solid var(--border);border-radius:12px;color:var(--muted);font-size:12px;margin-bottom:12px;overflow-wrap:anywhere}.primary{width:100%;border:0;border-radius:13px;padding:14px;color:#16130e;background:linear-gradient(120deg,#f3d891,#c69c55);font-weight:900}.danger{width:100%;border:1px solid #fa6b6b55;border-radius:13px;padding:13px;background:#a52e3533;color:#ff8f94;font-weight:800}.pair-label{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}.pair-code{font-weight:800;letter-spacing:1px;text-align:center;font-size:19px;margin-bottom:10px}.info{color:var(--muted);font-size:12px;line-height:1.6}.feedback{font-size:12px;color:var(--gold);margin-top:12px;min-height:17px;overflow-wrap:anywhere}.nav{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#111217f5;backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:12px max(10px,calc((100vw - 540px)/2)) calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr)}.nav button{border:0;background:none;color:#8c8d95;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;padding:0 3px}.nav button.active{color:var(--gold)}.nav svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}.footer{text-align:center;color:#65636a;font-size:10px;margin:15px 0}.hidden{display:none!important}.app-page{display:none}.app-page.active-page{display:block}.nav button{min-height:45px}.nav button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}@media(max-width:370px){main{padding-left:11px;padding-right:11px}.card{padding:15px}.big-money{font-size:34px}.metric .number{font-size:17px}.form-row{grid-template-columns:1fr}}
+/* Compact section headings, without changing MT5 controls */
+.section-head h2{font-size:17px;letter-spacing:-.2px}
+.section-head{margin-bottom:10px}
 </style>
 
 <style id="seyfx-redesign">
@@ -39,7 +42,7 @@ main{max-width:540px;padding-top:calc(20px + env(safe-area-inset-top));padding-b
 @media(max-width:370px){.brand-name{font-size:19px}.brand-sub{font-size:8px}.status-pill{padding:7px 8px;font-size:10px}}
 
 /* Mobile layout refinement: keep Telegram controls clear of brand and cards clear of bottom tabs */
-main{padding-top:calc(96px + env(safe-area-inset-top));padding-bottom:calc(125px + env(safe-area-inset-bottom))}
+main{padding-top:calc(48px + env(safe-area-inset-top));padding-bottom:calc(125px + env(safe-area-inset-bottom))}
 .header{margin-top:0;margin-bottom:16px;min-height:48px}
 .buttons{margin:0 0 14px;gap:10px}
 .action{padding:13px 7px}
@@ -49,7 +52,52 @@ main{padding-top:calc(96px + env(safe-area-inset-top));padding-bottom:calc(125px
 #system-status{margin-top:14px;margin-bottom:14px}
 .nav{min-height:72px;padding-top:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom));box-shadow:0 -8px 22px rgba(0,0,0,.30)}
 .nav button{min-height:48px}
-@media(max-width:390px){main{padding-top:calc(105px + env(safe-area-inset-top))}.header{gap:7px}.brand-name{font-size:19px}.brand-sub{font-size:8px}.status-pill{padding:7px 8px}}
+@media(max-width:390px){main{padding-top:calc(58px + env(safe-area-inset-top))}.header{gap:7px}.brand-name{font-size:19px}.brand-sub{font-size:8px}.status-pill{padding:7px 8px}}
+/* Compact spacing: aligned headings, cards and navigation */
+.hero{padding:18px 18px 12px;margin-bottom:10px}
+.hero .big-money{margin:6px 0 5px}
+.chart{height:92px;margin-top:10px}
+.chart-note{margin-top:0}
+.buttons{margin:0 0 10px;gap:10px}
+.action{padding:11px 7px}
+.section-head{margin:0 2px 7px}
+.section-head h2{font-size:16px;line-height:1.25}
+.section-head .small{font-size:10px}
+.quote.card{padding:13px 14px;margin-bottom:12px}
+.quote-icon{width:36px;height:36px;border-radius:12px;font-size:19px}
+.quote-info .value{font-size:15px}
+.metric-grid{gap:9px;margin-bottom:8px}
+.metric{padding:12px 13px;border-radius:15px}
+.metric .label{margin-bottom:5px}
+.metric .number{font-size:18px}
+#system-status{margin-top:10px;margin-bottom:10px}
+#system-status.card{padding:13px 15px}
+.footer{margin:9px 0}
+/* Market Overview: taller, balanced card with tighter surrounding spacing */
+#dashboard > .section-head{margin-bottom:6px}
+#dashboard > .quote.card{min-height:88px;padding:16px 15px;margin-bottom:9px;gap:11px}
+#dashboard > .quote .quote-icon{width:44px;height:44px}
+#dashboard > .quote .quote-info .value{font-size:15px;line-height:1.25}
+#dashboard > .quote .right{flex-shrink:0;font-size:10px}
+#dashboard > .quote.card + .section-head{margin-top:3px;margin-bottom:7px}
+@media(max-width:370px){#dashboard > .quote.card{padding:14px 11px;gap:8px}#dashboard > .quote .quote-info .value{font-size:13px}#dashboard > .quote .right{font-size:9px}}
+/* Keep fixed tabs from covering last content */
+main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+
+/* Independent Signal preview; no live feed or trading commands */
+.nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:1px}
+.nav button{font-size:9px;padding:0 1px;white-space:nowrap}
+.nav svg{width:20px;height:20px}
+.signal-panel{padding:17px 15px}
+.signal-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.signal-symbol{font-size:24px;font-weight:800;letter-spacing:.4px;margin-bottom:4px}
+.signal-wait{color:#f5c76b;background:#f5c76b17;border:1px solid #f5c76b55;border-radius:11px;padding:10px 14px;font-weight:800}
+.signal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.signal-cell{background:#111216;border:1px solid #ffffff12;border-radius:13px;padding:13px}
+.signal-cell .label{font-size:11px;color:var(--muted);margin-bottom:8px}
+.signal-cell strong{font-size:19px}
+.signal-source{display:flex;align-items:center;gap:8px;margin-top:17px;color:var(--muted);font-size:11px}
+.signal-source .dot{background:#777}
 </style>
 </head>
 <body>
@@ -64,6 +112,20 @@ main{padding-top:calc(96px + env(safe-area-inset-top));padding-bottom:calc(125px
 <div class="section-head"><h2>Account Overview</h2><span class="small">MT5 data</span></div>
 <div class="metric-grid"><div class="metric"><div class="label">Equity</div><div class="number" id="equity">—</div></div><div class="metric"><div class="label">Floating P/L</div><div class="number" id="floating">—</div></div><div class="metric"><div class="label">Open Positions</div><div class="number" id="positions">—</div></div><div class="metric"><div class="label">Profit Day</div><div class="number gold" id="profitday2">—</div></div></div>
 </section>
+<section id="signal" class="section app-page" aria-label="SEY FX Signal">
+  <div class="section-head"><h2>SEY FX Signal</h2><span class="small">Independent · M5</span></div>
+  <div class="card signal-panel">
+    <div class="signal-top"><div><div class="signal-symbol">XAUUSD</div><div class="small">Gold / USD · 5-minute timeframe</div></div><span class="signal-wait">WAIT</span></div>
+    <div class="signal-grid">
+      <div class="signal-cell"><div class="label">Entry Price</div><strong>—</strong></div>
+      <div class="signal-cell"><div class="label">Take Profit</div><strong>—</strong></div>
+      <div class="signal-cell"><div class="label">Stop Loss</div><strong>—</strong></div>
+      <div class="signal-cell"><div class="label">Signal Strength</div><strong>—</strong></div>
+    </div>
+    <div class="signal-source"><span class="dot"></span> Market data not connected</div>
+    <p class="setting-note">Signal is not active yet. Live market data and analysis will be connected later. No BUY or SELL is generated without verified data. This feature does not control MT5 or the trading bot.</p>
+  </div>
+</section>
 <section id="settings" class="section app-page"><div class="section-head"><h2>Bot Settings</h2><span class="small">Control your EA</span></div><div class="card"><div class="form-row"><div class="form-group"><label for="profitInput">Pair Profit Target ($)</label><input class="field" id="profitInput" type="number" min="0.01" max="100000" step="0.01" inputmode="decimal" placeholder="e.g. 7"><button class="save" type="button" onclick="saveProfit()">SAVE PROFIT</button></div><div class="form-group"><label for="gridInput">Re-entry Distance (points)</label><input class="field" id="gridInput" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 1000"><button class="save" type="button" onclick="saveGrid()">SAVE DISTANCE</button></div></div><p class="setting-note">Values are sent to the MT5 Bridge. A successful request means queued, not yet confirmed by the EA. Distance is in MT5 points.</p><div class="feedback" id="settingStatus"></div></div></section>
 <section id="history" class="section app-page"><div class="section-head"><h2>Trading History</h2><span class="small">MT5 records</span></div><div class="card"><div class="quote"><div class="quote-icon">◷</div><div class="quote-info"><div class="name">Profit today</div><div class="value gold" id="historyProfitDay">—</div></div></div><p class="info">Full closed-trade history is not available from the current Mini App API. This page shows today's reported profit only; no sample trades are presented as real records.</p><button class="save" type="button" onclick="refresh()">REFRESH PROFIT</button></div></section>
 <section id="connect-mt5" class="section app-page"><div class="section-head"><h2>Connect MT5</h2><span class="small">Account pairing</span></div><div class="card"><div class="connection-status" id="pairStatus">Checking MT5 connection...</div><div id="pairingForm"><p class="info">Generate a pairing code, then enter it in your MT5 Bridge EA. Code expires after 5 minutes. Keep it private.</p><label class="pair-label" for="pairingCode">PAIRING CODE</label><input class="field pair-code" id="pairingCode" type="text" placeholder="XXXX-XXXX-XXXX" readonly autocomplete="off"><button class="primary" id="connectMt5Btn" type="button" onclick="connectMT5()">GENERATE PAIRING CODE</button></div><button class="danger hidden" id="disconnectMt5Btn" type="button" onclick="disconnectMT5()">DISCONNECT MT5</button></div></section>
@@ -72,6 +134,7 @@ main{padding-top:calc(96px + env(safe-area-inset-top));padding-bottom:calc(125px
 </main>
 <nav class="nav" aria-label="Main navigation">
 <button class="active" type="button" data-page="dashboard" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+<button type="button" data-page="signal" onclick="go('signal',this)"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Signal</button>
 <button type="button" data-page="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Settings</button>
 <button type="button" data-page="history" onclick="go('history',this)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>History</button>
 <button type="button" data-page="connect-mt5" onclick="go('connect-mt5',this)"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0-7 7l1.2-1.2"/></svg>Connect MT5</button>
