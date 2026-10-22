@@ -577,15 +577,31 @@ svg{
       <span>FLOATING P/L</span>
     </div>
 
-    <div class="execbox">
-      <b id="target">$5.00</b>
-      <span>PROFIT TARGET</span>
-    </div>
+    
+<div class="execbox">
+  <b id="target">$5.00</b>
+  <span>PROFIT TARGET</span>
+  <input id="profitInput" type="number"
+         min="0.01" max="100000" step="0.01"
+         placeholder="Enter Profit Target"
+         style="width:100%;margin-top:10px;padding:10px;">
+  <button type="button" onclick="saveProfit()">
+    SAVE PROFIT
+  </button>
+</div>
 
-    <div class="execbox">
-      <b id="reentry">1000</b>
-      <span>RE-ENTRY PIPS</span>
-    </div>
+<div class="execbox">
+  <b id="reentry">1000</b>
+  <span>RE-ENTRY PIPS</span>
+  <input id="gridInput" type="number"
+         min="1" max="1000000" step="1"
+         placeholder="Enter Re-entry Points"
+         style="width:100%;margin-top:10px;padding:10px;">
+  <button type="button" onclick="saveGrid()">
+    SAVE RE-ENTRY
+  </button>
+</div>
+
 
   </div>
 
@@ -750,6 +766,84 @@ await refresh();
   }
 }
 
+
+async function saveSetting(action, inputId) {
+  const status = document.getElementById("status");
+  const input = document.getElementById(inputId);
+  const value = Number(input.value);
+
+  if (!Number.isFinite(value) || value <= 0 ||
+      (action === "set_profit" && value > 100000) ||
+      (action === "set_grid" &&
+       (!Number.isInteger(value) || value > 1000000))) {
+    alert("Please enter a valid setting value");
+    return;
+  }
+
+  try {
+    if (!telegramInitData) {
+      throw new Error("Open inside Telegram");
+    }
+
+    const accountsResponse = await fetch(
+      API_BASE + "/api/accounts",
+      {
+        headers: {
+          "x-telegram-init-data": telegramInitData
+        },
+        cache: "no-store"
+      }
+    );
+
+    if (!accountsResponse.ok) {
+      throw new Error("Cannot load MT5 account");
+    }
+
+    const accountsData = await accountsResponse.json();
+    const accounts = accountsData.accounts || [];
+
+    if (accounts.length !== 1) {
+      throw new Error("Please connect exactly one MT5 account");
+    }
+
+    const response = await fetch(
+      API_BASE + "/api/command",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-telegram-init-data": telegramInitData
+        },
+        body: JSON.stringify({
+          accountId: accounts[0].accountId,
+          action: action,
+          value: value
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "Save failed");
+    }
+
+    status.textContent = "Setting sent to MT5";
+    alert("Setting queued. Wait for MT5 confirmation.");
+
+  } catch (error) {
+    status.textContent = "Error: " + error.message;
+    alert(error.message);
+  }
+}
+
+async function saveProfit() {
+  await saveSetting("set_profit", "profitInput");
+}
+
+async function saveGrid() {
+  await saveSetting("set_grid", "gridInput");
+}
 
 async function refresh(){
   const status = document.getElementById("status");
