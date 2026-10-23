@@ -131,6 +131,38 @@ button { max-width:100%; touch-action:manipulation; }
  .form-group .save { font-size:10px; padding:10px 4px; }
 }
 </style>
+
+<style id="seyfx-signal-compact-v2">
+/* Compact Signal view only: leave Dashboard, MT5, Settings and backend untouched. */
+#signal .card{border-radius:17px;margin-bottom:10px}
+#signal .tv-chart-card{padding:10px!important}
+#signal .tv-chart-card .section-head{margin-bottom:7px!important}
+#signal .tv-chart-card .section-head h2{font-size:15px}
+#signal .tv-chart-frame{height:245px!important;border-radius:10px!important}
+#signal .tv-chart-card .setting-note{font-size:9px;line-height:1.4;margin:8px 2px 0}
+#signal .signal-panel{padding:13px 12px}
+#signal .signal-top{margin-bottom:10px}
+#signal .signal-symbol{font-size:19px;margin-bottom:2px}
+#signal .signal-wait{padding:7px 10px;font-size:12px;border-radius:9px}
+#signal .signal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#signal .signal-cell{padding:9px 10px;border-radius:10px}
+#signal .signal-cell .label{font-size:10px;margin-bottom:5px}
+#signal .signal-cell strong{font-size:15px;overflow-wrap:anywhere}
+#signal .signal-source{margin-top:10px;font-size:10px}
+#signal #signalMarketDetails{font-size:10px;line-height:1.4!important}
+#signal .signal-panel .setting-note{font-size:9px;margin-top:8px}
+#signal .signal-history-card{padding:8px 12px;min-height:70px}
+#signal .signal-record{padding:10px 0;gap:5px}
+#signal .signal-record strong{font-size:12px}
+#signal .signal-record .small{font-size:10px;line-height:1.5}
+#signal .signal-record-head{display:flex;justify-content:space-between;align-items:center;gap:7px}
+#signal .signal-outcome{font-size:9px;font-weight:800;border:1px solid #ffffff30;border-radius:8px;padding:4px 7px;white-space:nowrap;color:#a3a5ad}
+#signal .signal-outcome.tp{color:#42d595;border-color:#42d59570}
+#signal .signal-outcome.sl{color:#ff5260;border-color:#ff526070}
+#signal .signal-outcome.active{color:#f5c76b;border-color:#f5c76b70}
+#signal .history-more{display:block;width:100%;border:1px solid #ffffff25;background:#1d1e24;color:#ddd;border-radius:10px;padding:9px;margin-top:10px;font-size:11px}
+@media(max-width:370px){#signal .tv-chart-frame{height:225px!important}#signal .signal-cell strong{font-size:13px}}
+</style>
 </head>
 <body>
 <main>
@@ -146,10 +178,10 @@ button { max-width:100%; touch-action:manipulation; }
 </section>
 <section id="signal" class="section app-page" aria-label="SEY FX Signal">
   <div class="section-head"><h2>SEY FX Signal</h2><span class="small">Independent · M5</span></div>
-  <div class="card" style="padding:12px;margin-bottom:12px" aria-label="TradingView XAUUSD chart">
+  <div class="card tv-chart-card" style="padding:12px;margin-bottom:12px" aria-label="TradingView XAUUSD chart">
     <div class="section-head" style="margin:0 3px 10px"><h2>XAUUSD Live Chart</h2><span class="small">TradingView · M5</span></div>
-    <iframe title="TradingView XAUUSD 5-minute candlestick chart" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
-      style="display:block;width:100%;height:380px;border:0;border-radius:12px;background:#111216"
+    <iframe class="tv-chart-frame" title="TradingView XAUUSD 5-minute candlestick chart" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+      style="display:block;width:100%;height:245px;border:0;border-radius:12px;background:#111216"
       src="https://www.tradingview.com/widgetembed/?frameElementId=seyfx-gold-chart&amp;symbol=OANDA%3AXAUUSD&amp;interval=5&amp;hidesidetoolbar=1&amp;symboledit=0&amp;saveimage=0&amp;toolbarbg=131722&amp;theme=dark&amp;style=1&amp;timezone=Etc%2FUTC&amp;withdateranges=1&amp;hideideas=1&amp;locale=en"></iframe>
     <p class="setting-note">TradingView chart is a separate market-data source. Quotes may differ from the SEY FX Signal feed (Twelve Data). Chart does not execute trades or automatically plot SEY FX Entry / TP / SL.</p>
   </div>
@@ -167,7 +199,7 @@ button { max-width:100%; touch-action:manipulation; }
   <div class="signal-history" aria-label="Signal History">
     <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
     <div class="card signal-history-card">
-      <div id="signalHistoryList" aria-live="polite"></div>
+      <div id="signalHistoryList" aria-live="polite"></div><button id="signalHistoryMore" class="history-more hidden" type="button" onclick="toggleSignalHistory()">Show More</button>
       <div class="signal-history-empty" id="signalHistoryEmpty">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
         <strong>No signals yet</strong>
@@ -268,30 +300,51 @@ async function refreshSignal(){
   finally{signalRefreshing=false;}
 }
 
-// Display only actual signals recorded by the authenticated backend.
+// Show only records from backend. Optional outcome labels appear only when backend provides them.
+let signalHistoryExpanded=false;
+let signalHistoryCache=[];
+function toggleSignalHistory(){signalHistoryExpanded=!signalHistoryExpanded;renderSignalHistory();}
+function renderSignalHistory(){
+  const list=el('signalHistoryList'),empty=el('signalHistoryEmpty'),more=el('signalHistoryMore');
+  const signals=signalHistoryCache.filter(item=>['BUY','SELL'].includes(String(item.side).toUpperCase()));
+  list.replaceChildren();empty.style.display=signals.length?'none':'';
+  more.classList.toggle('hidden',signals.length<=5);
+  more.textContent=signalHistoryExpanded?'Show Less':'Show More ('+(signals.length-5)+')';
+  for(const item of (signalHistoryExpanded?signals:signals.slice(0,5))){
+    const card=document.createElement('div');card.className='signal-record';
+    const head=document.createElement('div');head.className='signal-record-head';
+    const title=document.createElement('strong');
+    title.textContent=String(item.side).toUpperCase()+' · '+String(item.symbol||'XAUUSD')+' · '+String(item.timeframe||'M5');
+    title.style.color=String(item.side).toUpperCase()==='BUY'?'#3bd68a':'#ff6666';
+    head.append(title);
+    // Do not infer an outcome from price or invent status: backend must provide it.
+    const rawStatus=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
+    let outcome='',cls='';
+    if(/TAKE PROFIT|TP HIT|TP REACHED/.test(rawStatus)){outcome='TP HIT';cls='tp';}
+    else if(/STOP LOSS|SL HIT|SL REACHED/.test(rawStatus)){outcome='SL HIT';cls='sl';}
+    else if(/ACTIVE|ENTRY HIT|OPEN/.test(rawStatus)){outcome='ACTIVE';cls='active';}
+    if(outcome){const tag=document.createElement('span');tag.className='signal-outcome '+cls;tag.textContent=outcome;head.append(tag);}
+    const detail=document.createElement('div');detail.className='small';
+    const fmt=v=>v===null||v===undefined?'—':String(v);
+    detail.textContent='Entry: '+fmt(item.entry)+' · TP: '+fmt(item.takeProfit)+' · SL: '+fmt(item.stopLoss)+' · Strength: '+fmt(item.strength);
+    const date=document.createElement('div');date.className='small';
+    const parsed=new Date(item.occurredAt);date.textContent=Number.isNaN(parsed.getTime())?'':parsed.toLocaleString();
+    const outcomeTime=item.outcomeAt??item.resolvedAt??item.statusAt;
+    if(outcome&&outcomeTime){const time=document.createElement('div');time.className='small';time.style.color=cls==='tp'?'#42d595':cls==='sl'?'#ff5260':'#f5c76b';const dt=new Date(outcomeTime);time.textContent=outcome+' · '+(Number.isNaN(dt.getTime())?String(outcomeTime):dt.toLocaleString());card.append(head,detail,time,date);}
+    else card.append(head,detail,date);
+    list.append(card);
+  }
+}
 async function refreshSignalHistory(){
-  const list=el('signalHistoryList'), empty=el('signalHistoryEmpty');
   if(!telegramInitData)return;
   try{
     const data=await request('/api/signals/history');
-    const signals=Array.isArray(data.signals)?data.signals:[];
-    list.replaceChildren();
-    empty.style.display=signals.length?'none':'';
-    if(!signals.length)return;
-    for(const item of signals){
-      if(!['BUY','SELL'].includes(String(item.side).toUpperCase()))continue;
-      const card=document.createElement('div');card.className='signal-record';
-      const title=document.createElement('strong');title.textContent=String(item.side).toUpperCase()+' · '+String(item.symbol||'XAUUSD')+' · '+String(item.timeframe||'M5');
-      title.style.color=String(item.side).toUpperCase()==='BUY'?'#3bd68a':'#ff6666';
-      const detail=document.createElement('div');detail.className='small';
-      const fmt=v=>v===null||v===undefined?'—':String(v);
-      detail.textContent='Entry: '+fmt(item.entry)+'  ·  TP: '+fmt(item.takeProfit)+'  ·  SL: '+fmt(item.stopLoss)+'  ·  Strength: '+fmt(item.strength);
-      const date=document.createElement('div');date.className='small';
-      const parsed=new Date(item.occurredAt);date.textContent=Number.isNaN(parsed.getTime())?'':parsed.toLocaleString();
-      card.append(title,detail,date);list.append(card);
-    }
-    if(!list.childElementCount)empty.style.display='';
-  }catch(e){list.replaceChildren();empty.style.display='';empty.querySelector('p').textContent='Signal history unavailable: '+e.message;}
+    signalHistoryCache=Array.isArray(data.signals)?data.signals:[];
+    renderSignalHistory();
+  }catch(e){
+    signalHistoryCache=[];renderSignalHistory();
+    el('signalHistoryEmpty').querySelector('p').textContent='Signal history unavailable: '+e.message;
+  }
 }
 refreshSignalHistory();setInterval(refreshSignalHistory,60000);
 
