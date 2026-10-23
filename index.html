@@ -185,6 +185,13 @@ button { max-width:100%; touch-action:manipulation; }
       src="https://www.tradingview.com/widgetembed/?frameElementId=seyfx-gold-chart&amp;symbol=OANDA%3AXAUUSD&amp;interval=5&amp;hidesidetoolbar=1&amp;symboledit=0&amp;saveimage=0&amp;toolbarbg=131722&amp;theme=dark&amp;style=1&amp;timezone=Etc%2FUTC&amp;withdateranges=1&amp;hideideas=1&amp;locale=en"></iframe>
     <p class="setting-note">TradingView chart is a separate market-data source. Quotes may differ from the SEY FX Signal feed (Twelve Data). Chart does not execute trades or automatically plot SEY FX Entry / TP / SL.</p>
   </div>
+
+  <div class="card" id="seyfxCustomTest" style="padding:12px;margin-bottom:12px">
+    <div class="section-head"><h2>SEY FX Custom Chart · TEST</h2><span class="small">Donchian 20 · ATR 14 · EMA 200</span></div>
+    <p class="setting-note" style="margin:0 0 8px">Experimental chart using the existing M5 market feed. Entry / TP / SL boxes are analysis only; they do not place trades.</p>
+    <div style="position:relative;width:100%;background:#090e14;border-radius:10px;overflow:hidden"><canvas id="seyfxTestCanvas" style="display:block;width:100%;height:330px" aria-label="XAUUSD test candlestick chart with BUY SELL entry stop loss and take profit zones"></canvas></div>
+    <div id="seyfxTestStatus" class="setting-note" role="status">Waiting for XAUUSD candles…</div>
+  </div>
   <div class="card signal-panel">
     <div class="signal-top"><div><div class="signal-symbol">XAUUSD</div><div class="small">Gold / USD · 5-minute timeframe</div></div><span class="signal-wait" id="signalAction">WAIT</span></div>
     <div class="signal-grid">
@@ -346,6 +353,78 @@ async function refreshSignalHistory(){
     el('signalHistoryEmpty').querySelector('p').textContent='Signal history unavailable: '+e.message;
   }
 }
+
+// Experimental, read-only Donchian / ATR chart. Existing signal and MT5 controls untouched.
+const seyfxCanvas=document.getElementById('seyfxTestCanvas');
+const seyfxTestStatus=document.getElementById('seyfxTestStatus');
+let seyfxTestCandles=[];
+function seyfxParseCandles(raw){
+  if(!Array.isArray(raw))return [];
+  return raw.map(c=>({
+    t:c.datetime??c.time??c.timestamp??c.date??'',
+    o:Number(c.open??c.o),h:Number(c.high??c.h),l:Number(c.low??c.l),cl:Number(c.close??c.c)
+  })).filter(c=>[c.o,c.h,c.l,c.cl].every(Number.isFinite)&&c.h>=Math.max(c.o,c.cl)&&c.l<=Math.min(c.o,c.cl)&&c.h>=c.l)
+    .sort((a,b)=>{const x=Date.parse(a.t),y=Date.parse(b.t);return Number.isFinite(x)&&Number.isFinite(y)?x-y:0;});
+}
+function seyfxDrawTest(){
+  const cvs=seyfxCanvas;if(!cvs)return;
+  const w=Math.max(270,Math.round(cvs.getBoundingClientRect().width)),h=330,dpr=Math.min(2,window.devicePixelRatio||1);
+  cvs.width=Math.round(w*dpr);cvs.height=Math.round(h*dpr);
+  const ctx=cvs.getContext('2d');ctx.scale(dpr,dpr);ctx.fillStyle='#090e14';ctx.fillRect(0,0,w,h);
+  const all=seyfxTestCandles;
+  if(all.length<22){ctx.fillStyle='#aeb8c6';ctx.font='12px sans-serif';ctx.fillText('Waiting for at least 22 valid M5 candles',12,30);return;}
+  const atr=[],ema=[],upper=[],lower=[],signals=[];let prev=all[0].cl,smoothedTR=0;
+  for(let i=0;i<all.length;i++){
+    const c=all[i],tr=Math.max(c.h-c.l,Math.abs(c.h-prev),Math.abs(c.l-prev));
+    if(i<14)smoothedTR+=tr;
+    if(i===13)smoothedTR/=14;
+    else if(i>13)smoothedTR=(smoothedTR*13+tr)/14;
+    atr.push(i>=13?smoothedTR:null);
+    ema.push(i===0?c.cl:ema[i-1]+(2/201)*(c.cl-ema[i-1]));
+    upper.push(i>=20?Math.max(...all.slice(i-20,i).map(x=>x.h)):null);
+    lower.push(i>=20?Math.min(...all.slice(i-20,i).map(x=>x.l)):null);
+    if(i>=200&&atr[i]&&atr[i]>0){
+      const buy=c.cl>upper[i]&&c.cl>ema[i]&&all[i-1].cl<=upper[i-1];
+      const sell=c.cl<lower[i]&&c.cl<ema[i]&&all[i-1].cl>=lower[i-1];
+      if(buy||sell){const side=buy?'BUY':'SELL',risk=1.5*atr[i];signals.push({i,side,entry:c.cl,sl:buy?c.cl-risk:c.cl+risk,tp:buy?c.cl+2*risk:c.cl-2*risk});}
+    }
+    prev=c.cl;
+  }
+  const start=Math.max(0,all.length-55),view=all.slice(start),visible=signals.filter(s=>s.i>=start);
+  const left=9,right=61,top=20,bottom=25,pw=w-left-right,ph=h-top-bottom;
+  const values=view.flatMap(c=>[c.h,c.l]);visible.forEach(s=>values.push(s.tp,s.sl));
+  let lo=Math.min(...values),hi=Math.max(...values);const pad=(hi-lo||1)*.08;lo-=pad;hi+=pad;
+  const yy=p=>top+(hi-p)/(hi-lo)*ph,xx=i=>left+(i-start+.5)*pw/view.length;
+  ctx.strokeStyle='#22303b';ctx.lineWidth=.6;ctx.font='10px sans-serif';
+  for(let j=0;j<=4;j++){let y=top+j*ph/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right+4,y);ctx.stroke();ctx.fillStyle='#9faebb';ctx.fillText((hi-j*(hi-lo)/4).toFixed(2),w-right+7,y+3);}
+  function line(vals,color){ctx.strokeStyle=color;ctx.lineWidth=1.4;ctx.beginPath();let begun=false;for(let i=start;i<all.length;i++){const v=vals[i];if(v===null)continue;const x=xx(i),y=yy(v);if(!begun){ctx.moveTo(x,y);begun=true;}else ctx.lineTo(x,y);}ctx.stroke();}
+  line(upper,'#168bff');line(lower,'#fa4254');if(all.length>=200)line(ema,'#ffaf2d');
+  const bw=Math.max(2,Math.min(8,pw/view.length*.64));
+  for(let i=start;i<all.length;i++){const c=all[i],x=xx(i),color=c.cl>=c.o?'#23d69b':'#ff4d61';ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,yy(c.h));ctx.lineTo(x,yy(c.l));ctx.stroke();ctx.fillRect(x-bw/2,Math.min(yy(c.o),yy(c.cl)),bw,Math.max(1,Math.abs(yy(c.o)-yy(c.cl))));}
+  // Plot latest two visible setups, avoiding misleading hypothetical trades.
+  for(const s of visible.slice(-2)){
+    const x=xx(s.i)+bw+3,x2=Math.min(w-right-2,x+Math.max(26,pw*.17));
+    const yEntry=yy(s.entry),yTP=yy(s.tp),ySL=yy(s.sl);
+    ctx.fillStyle='rgba(0,200,130,.25)';ctx.fillRect(x,Math.min(yEntry,yTP),Math.max(2,x2-x),Math.abs(yTP-yEntry));
+    ctx.fillStyle='rgba(250,55,70,.30)';ctx.fillRect(x,Math.min(yEntry,ySL),Math.max(2,x2-x),Math.abs(ySL-yEntry));
+    ctx.strokeStyle='#4aa5ff';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(x-4,yEntry);ctx.lineTo(x2,yEntry);ctx.stroke();
+    const label=(txt,y,color)=>{ctx.font='bold 10px sans-serif';const tw=ctx.measureText(txt).width+9;const lx=Math.min(w-tw-3,x2+2);ctx.fillStyle=color;ctx.fillRect(lx,y-10,tw,14);ctx.fillStyle='white';ctx.fillText(txt,lx+4,y+1);};
+    label('Entry '+s.entry.toFixed(2),yEntry,'#1659bd');
+    label('TP '+s.tp.toFixed(2),yTP,'#087d56');
+    label('SL '+s.sl.toFixed(2),ySL,'#a82336');
+    ctx.fillStyle=s.side==='BUY'?'#1fe29d':'#ff5365';ctx.font='bold 12px sans-serif';ctx.fillText(s.side,Math.max(4,x-10),Math.max(13,Math.min(h-8,yEntry+(s.side==='BUY'?22:-16))));
+  }
+  ctx.font='10px sans-serif';ctx.fillStyle='#b8c5d0';ctx.fillText('M5 · TEST · Historical candle-close signals',left,12);
+  seyfxTestStatus.textContent='Candles: '+all.length+' · '+(all.length<201?'EMA 200 signals require at least 201 candles. ':'')+'Visible BUY/SELL setups: '+visible.length+' · No trade execution';
+}
+async function seyfxLoadTest(){
+  if(!telegramInitData){seyfxTestStatus.textContent='Open inside Telegram to load authenticated market candles.';seyfxDrawTest();return;}
+  try{const data=await request('/api/market/xauusd/m5');seyfxTestCandles=seyfxParseCandles(data.candles);seyfxDrawTest();}
+  catch(e){seyfxTestStatus.textContent='Chart data unavailable: '+e.message;seyfxDrawTest();}
+}
+window.addEventListener('resize',seyfxDrawTest);
+seyfxLoadTest();setInterval(seyfxLoadTest,60000);
+
 refreshSignalHistory();setInterval(refreshSignalHistory,60000);
 
 refreshSignal();setInterval(refreshSignal,60000);
