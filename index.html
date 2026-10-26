@@ -204,6 +204,27 @@ button { max-width:100%; touch-action:manipulation; }
 @media(min-width:520px){#signal .sey-price-chart{height:260px!important}#signal .analysis-panels{gap:8px!important}#signal .analysis-tile{padding:10px!important}}
 @media(max-width:365px){#signal .sey-mini-card{padding:6px 3px}#signal .sey-mini-title{font-size:8px}#signal .analysis-tile h3{font-size:9px!important}}
 </style>
+<style id="seyfx-hide-rsi-macd-panels-v4">
+/* Keep RSI/MACD calculations and Market Analysis, but remove their large chart panels. */
+#signal .indicator-row,
+#signal #seyRsiChart,
+#signal #seyMacdChart { display:none !important; }
+#signal .analysis-chart-card .indicator-strip { margin-bottom:4px !important; }
+</style>
+<style id="seyfx-history-table-v5">
+#signal .signal-history-card{padding:9px 8px;min-height:65px;overflow:hidden}
+#signal .sey-history-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+#signal .sey-history-table{width:100%;min-width:690px;border-collapse:collapse;table-layout:auto;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#signal .sey-history-table th{background:#252b34;color:#bfc4ce;font-size:10px;font-weight:600;text-align:left;padding:9px 8px}
+#signal .sey-history-table th:first-child{border-radius:7px 0 0 7px}
+#signal .sey-history-table th:last-child{border-radius:0 7px 7px 0}
+#signal .sey-history-table td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.10);color:#e6e8ec}
+#signal .sey-history-table tbody tr:last-child td{border-bottom:0}
+#signal .sey-history-table td.sey-history-win{color:#32d994;font-weight:800}
+#signal .sey-history-table td.sey-history-loss{color:#ff5768;font-weight:800}
+#signal .sey-history-table td.sey-history-pending{color:#f2c75a;font-weight:800}
+#signal .history-more{margin-top:7px;padding:9px}
+</style>
 </head>
 <body>
 <main>
@@ -356,34 +377,38 @@ function renderSignalHistory(){
   const signals=signalHistoryCache.filter(item=>['BUY','SELL'].includes(String(item.side).toUpperCase()));
   list.replaceChildren();empty.style.display=signals.length?'none':'';
   more.classList.toggle('hidden',signals.length<=5);
-  more.textContent=signalHistoryExpanded?'Show Less':'Show More ('+(signals.length-5)+')';
+  more.textContent=signalHistoryExpanded?'Show Less':'View All ('+signals.length+')';
+  if(!signals.length)return;
+  const scroll=document.createElement('div');scroll.className='sey-history-scroll';
+  scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Scrollable XAUUSD signal history');scroll.tabIndex=0;
+  const table=document.createElement('table');table.className='sey-history-table';
+  const thead=document.createElement('thead'),heading=document.createElement('tr');
+  ['Time','Type','Entry','TP1','TP2','TP3','SL','Result'].forEach(label=>{const th=document.createElement('th');th.textContent=label;heading.append(th);});
+  thead.append(heading);table.append(thead);
+  const tbody=document.createElement('tbody');
+  const price=v=>{if(v===null||v===undefined||v==='')return '—';const n=Number(v);return Number.isFinite(n)?n.toFixed(3):'—';};
   for(const item of (signalHistoryExpanded?signals:signals.slice(0,5))){
-    const card=document.createElement('div');card.className='signal-record';
-    const head=document.createElement('div');head.className='signal-record-head';
-    const title=document.createElement('strong');
-    title.textContent=String(item.side).toUpperCase()+' · '+String(item.symbol||'XAUUSD')+' · '+String(item.timeframe||'M5');
-    title.style.color=String(item.side).toUpperCase()==='BUY'?'#3bd68a':'#ff6666';
-    head.append(title);
-    // Do not infer an outcome from price or invent status: backend must provide it.
-    const rawStatus=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
-    let outcome='',cls='';
-    if(/TP3 HIT/.test(rawStatus)){outcome='TP3 HIT';cls='tp';}
-     else if(/TP2 HIT/.test(rawStatus)){outcome='TP2 HIT';cls='tp';}
-     else if(/TP1 HIT/.test(rawStatus)){outcome='TP1 HIT';cls='tp';}
-     else if(/TAKE PROFIT|TP HIT|TP REACHED/.test(rawStatus)){outcome='TP HIT';cls='tp';}
-    else if(/STOP LOSS|SL HIT|SL REACHED/.test(rawStatus)){outcome='SL HIT';cls='sl';}
-    else if(/ACTIVE|ENTRY HIT|OPEN/.test(rawStatus)){outcome='ACTIVE';cls='active';}
-    if(outcome){const tag=document.createElement('span');tag.className='signal-outcome '+cls;tag.textContent=outcome;head.append(tag);}
-    const detail=document.createElement('div');detail.className='small';
-    const fmt=v=>v===null||v===undefined?'—':String(v);
-    detail.textContent='Entry: '+fmt(item.entry)+' · TP1: '+fmt(item.tp1)+' · TP2: '+fmt(item.tp2)+' · TP3: '+fmt(item.tp3)+' · SL: '+fmt(item.stopLoss)+' · Strength: '+fmt(item.strength)+(item.hitTp1?' · ✓ TP1':'')+(item.hitTp2?' · ✓ TP2':'')+(item.hitTp3?' · ✓ TP3':'');
-    const date=document.createElement('div');date.className='small';
-    const parsed=new Date(item.occurredAt);date.textContent=Number.isNaN(parsed.getTime())?'':parsed.toLocaleString();
-    const outcomeTime=item.outcomeAt??item.resolvedAt??item.statusAt;
-    if(outcome&&outcomeTime){const time=document.createElement('div');time.className='small';time.style.color=cls==='tp'?'#42d595':cls==='sl'?'#ff5260':'#f5c76b';const dt=new Date(outcomeTime);time.textContent=outcome+' · '+(Number.isNaN(dt.getTime())?String(outcomeTime):dt.toLocaleString());card.append(head,detail,time,date);}
-    else card.append(head,detail,date);
-    list.append(card);
+    const side=String(item.side).toUpperCase();
+    const date=new Date(item.occurredAt);const time=Number.isNaN(date.getTime())?'—':date.toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+    const raw=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
+    let result='—',statusClass='';
+    if(/TP3 HIT/.test(raw)){result='TP3 ✓';statusClass='sey-history-win';}
+    else if(/TP2 HIT/.test(raw)){result='TP2 ✓';statusClass='sey-history-win';}
+    else if(/TP1 HIT/.test(raw)){result='TP1 ✓';statusClass='sey-history-win';}
+    else if(/TAKE PROFIT|TP HIT|TP REACHED/.test(raw)){result='TP ✓';statusClass='sey-history-win';}
+    else if(/STOP LOSS|SL HIT|SL REACHED/.test(raw)){result='SL ✕';statusClass='sey-history-loss';}
+    else if(/AMBIGUOUS/.test(raw)){result='CHECK';statusClass='sey-history-pending';}
+    else if(/WAITING ENTRY/.test(raw)){result='PENDING';statusClass='sey-history-pending';}
+    else if(/ACTIVE|ENTRY HIT|OPEN/.test(raw)){result='OPEN';statusClass='sey-history-pending';}
+    const tr=document.createElement('tr');
+    [time,side,price(item.entry),price(item.tp1),price(item.tp2),price(item.tp3),price(item.stopLoss),result].forEach((value,i)=>{
+      const td=document.createElement('td');td.textContent=value;
+      if(i===1)td.className=side==='BUY'?'sey-history-win':'sey-history-loss';
+      if(i===7)td.className=statusClass;
+      tr.append(td);
+    });tbody.append(tr);
   }
+  table.append(tbody);scroll.append(table);list.append(scroll);
 }
 async function refreshSignalHistory(){
   if(!telegramInitData)return;
