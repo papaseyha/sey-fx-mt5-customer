@@ -189,12 +189,14 @@ button { max-width:100%; touch-action:manipulation; }
     <div class="signal-top"><div><div class="signal-symbol">XAUUSD</div><div class="small">Gold / USD · 5-minute timeframe</div></div><span class="signal-wait" id="signalAction">WAIT</span></div>
     <div class="signal-grid">
       <div class="signal-cell"><div class="label">Entry Price</div><strong id="signalEntry">—</strong></div>
-      <div class="signal-cell"><div class="label">Take Profit</div><strong id="signalTP">—</strong></div>
+      <div class="signal-cell"><div class="label">TP1 · 1R</div><strong id="signalTP1">—</strong></div>
+       <div class="signal-cell"><div class="label">TP2 · 2R</div><strong id="signalTP2">—</strong></div>
+       <div class="signal-cell"><div class="label">TP3 · 3R</div><strong id="signalTP3">—</strong></div>
       <div class="signal-cell"><div class="label">Stop Loss</div><strong id="signalSL">—</strong></div>
       <div class="signal-cell"><div class="label">Signal Strength</div><strong id="signalStrength">—</strong></div>
     </div>
     <div class="signal-source"><span class="dot" id="signalDot"></span><span id="signalSourceText">Connecting to market data...</span></div><div class="small" id="signalMarketDetails" style="margin-top:9px;line-height:1.5"></div>
-    <p class="setting-note">Read-only independent XAUUSD M5 analysis. BUY/SELL appears only when the backend returns a valid signal with Entry, TP and SL. Signals do not place MT5 trades automatically.</p>
+    <p class="setting-note">Read-only independent XAUUSD M5 analysis. BUY/SELL appears only when the backend returns a valid signal with Entry, TP1, TP2, TP3 and SL. Signals do not place MT5 trades automatically.</p>
   </div>
   <div class="signal-history" aria-label="Signal History">
     <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
@@ -266,7 +268,7 @@ function signalReset(message){
   const action=el('signalAction');
   action.textContent='WAIT';
   action.style.color='#f5c76b';action.style.borderColor='#f5c76b55';action.style.background='#f5c76b17';
-  el('signalEntry').textContent='—';el('signalTP').textContent='—';
+  el('signalEntry').textContent='—';['signalTP1','signalTP2','signalTP3'].forEach(id=>el(id).textContent='—');
   el('signalSL').textContent='—';el('signalStrength').textContent='—';
   el('signalSourceText').textContent=message;
   el('signalMarketDetails').textContent='';el('signalDot').style.background='#777';
@@ -289,7 +291,7 @@ async function refreshSignal(){
     const color=active?(side==='BUY'?'#42d595':'#ff5260'):'#f5c76b';
     action.style.color=color;action.style.borderColor=color+'88';action.style.background=color+'17';
     el('signalEntry').textContent=active?signalPrice(data.entry):'—';
-    el('signalTP').textContent=active?signalPrice(data.takeProfit):'—';
+    ['tp1','tp2','tp3'].forEach((key,i)=>el('signalTP'+(i+1)).textContent=active?signalPrice(data[key]):'—');
     el('signalSL').textContent=active?signalPrice(data.stopLoss):'—';
     const strength=Number(data.strength);
     el('signalStrength').textContent=active&&data.strength!==null&&data.strength!==undefined&&Number.isFinite(strength)&&strength>=0&&strength<=100?Math.round(strength)+'%':'—';
@@ -320,13 +322,16 @@ function renderSignalHistory(){
     // Do not infer an outcome from price or invent status: backend must provide it.
     const rawStatus=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
     let outcome='',cls='';
-    if(/TAKE PROFIT|TP HIT|TP REACHED/.test(rawStatus)){outcome='TP HIT';cls='tp';}
+    if(/TP3 HIT/.test(rawStatus)){outcome='TP3 HIT';cls='tp';}
+     else if(/TP2 HIT/.test(rawStatus)){outcome='TP2 HIT';cls='tp';}
+     else if(/TP1 HIT/.test(rawStatus)){outcome='TP1 HIT';cls='tp';}
+     else if(/TAKE PROFIT|TP HIT|TP REACHED/.test(rawStatus)){outcome='TP HIT';cls='tp';}
     else if(/STOP LOSS|SL HIT|SL REACHED/.test(rawStatus)){outcome='SL HIT';cls='sl';}
     else if(/ACTIVE|ENTRY HIT|OPEN/.test(rawStatus)){outcome='ACTIVE';cls='active';}
     if(outcome){const tag=document.createElement('span');tag.className='signal-outcome '+cls;tag.textContent=outcome;head.append(tag);}
     const detail=document.createElement('div');detail.className='small';
     const fmt=v=>v===null||v===undefined?'—':String(v);
-    detail.textContent='Entry: '+fmt(item.entry)+' · TP: '+fmt(item.takeProfit)+' · SL: '+fmt(item.stopLoss)+' · Strength: '+fmt(item.strength);
+    detail.textContent='Entry: '+fmt(item.entry)+' · TP1: '+fmt(item.tp1)+' · TP2: '+fmt(item.tp2)+' · TP3: '+fmt(item.tp3??item.takeProfit)+' · SL: '+fmt(item.stopLoss)+' · Strength: '+fmt(item.strength)+(item.hitTp1?' · ✓ TP1':'')+(item.hitTp2?' · ✓ TP2':'')+(item.hitTp3?' · ✓ TP3':'');
     const date=document.createElement('div');date.className='small';
     const parsed=new Date(item.occurredAt);date.textContent=Number.isNaN(parsed.getTime())?'':parsed.toLocaleString();
     const outcomeTime=item.outcomeAt??item.resolvedAt??item.statusAt;
