@@ -392,8 +392,8 @@ function renderSignalHistory(){
     const date=new Date(item.occurredAt);const time=Number.isNaN(date.getTime())?'—':date.toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
     const raw=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
     let result='—',statusClass='';
-    if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp2===true){result='TP2 ✓ → SL';statusClass='sey-history-pending';}
-    else if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp1===true){result='TP1 ✓ → SL';statusClass='sey-history-pending';}
+    if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp2===true){result='TP2 ✓';statusClass='sey-history-win';}
+    else if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp1===true){result='TP1 ✓';statusClass='sey-history-win';}
     else if(/TP3 HIT/.test(raw)){result='TP3 ✓';statusClass='sey-history-win';}
     else if(/TP2 HIT/.test(raw)){result='TP2 ✓';statusClass='sey-history-win';}
     else if(/TP1 HIT/.test(raw)){result='TP1 ✓';statusClass='sey-history-win';}
