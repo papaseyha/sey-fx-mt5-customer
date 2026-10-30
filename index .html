@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090c">
+<title>SEY FX • Trading Control</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#08090c;--panel:#181a1f;--panel2:#202228;--gold:#ff3545;--gold2:#e62638;--text:#f8f9fb;--muted:#a3a5ad;--border:rgba(255,255,255,.105);--green:#42d595;--red:#ff5260}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 80% -5%,#302416 0,transparent 43%),var(--bg);color:var(--text);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}main{max-width:540px;margin:auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(98px + env(safe-area-inset-bottom))}.header{display:flex;align-items:center;justify-content:space-between;margin:5px 0 25px}.brand{display:flex;align-items:center;gap:10px}.mark{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid #f5d78b55;border-radius:9px;background:#171514;color:var(--gold);font-size:15px;font-weight:900;letter-spacing:-2px}.brand-name{font-size:21px;letter-spacing:1.5px;font-weight:800;color:var(--gold)}.brand-sub{font-size:9px;letter-spacing:1.4px;color:var(--muted);margin-top:2px}.status-pill{display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--border);border-radius:24px;font-size:11px;color:var(--muted);background:#ffffff06}.dot{height:7px;width:7px;border-radius:50%;background:#888}.status-pill.online .dot{background:var(--green);box-shadow:0 0 9px #4dd69a88}.status-pill.online{color:var(--green)}.card{background:linear-gradient(155deg,#24252b,#16171c 75%);border:1px solid var(--border);border-radius:22px;padding:19px;margin-bottom:16px;box-shadow:0 14px 30px #0004}.hero{position:relative;overflow:hidden;padding:24px 22px 16px}.hero:before{content:"";position:absolute;inset:-50% -20% auto auto;width:85%;height:110%;background:radial-gradient(circle,#b68c4140,transparent 65%);pointer-events:none}.eyebrow{font-size:12px;color:#c4bdb0;position:relative}.big-money{font-size:clamp(34px,8vw,48px);font-weight:800;color:#f5d78b;letter-spacing:-1.6px;margin:9px 0 7px;position:relative;font-variant-numeric:tabular-nums}.today{font-size:12px;color:var(--muted);position:relative}.today strong{color:var(--green);font-size:14px}.chart{width:100%;height:116px;margin-top:17px;display:block}.chart-note{text-align:center;color:var(--muted);font-size:10px;margin-top:0}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:2px 0 25px}.action{border:1px solid #e8c77c55;border-radius:30px;background:linear-gradient(160deg,#303036,#17181d);color:var(--gold);font-weight:800;letter-spacing:.5px;padding:16px 8px;box-shadow:inset 0 1px #ffffff19,0 0 16px #bd8b3220}.action span{font-size:17px;margin-right:6px}.action.off{color:#f4d3b7;border-color:#b78e6555}.action:active{transform:scale(.98)}.section-head{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 12px}.section-head h2{font-size:19px;letter-spacing:-.3px;margin:0}.small{font-size:11px;color:var(--muted)}.quote{display:flex;align-items:center;justify-content:space-between;gap:12px}.quote-icon{height:42px;width:42px;border-radius:15px;background:#b98d3930;display:grid;place-items:center;color:var(--gold);font-size:23px;flex:none}.quote-info{flex:1;min-width:0}.quote-info .name{color:var(--muted);font-size:11px}.quote-info .value{font-size:18px;font-weight:800;margin-top:3px}.quote .right{text-align:right;font-size:11px;color:var(--green)}.section{scroll-margin-top:20px}.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.metric{padding:16px;background:linear-gradient(155deg,#24252b,#18191f);border:1px solid var(--border);border-radius:18px;min-width:0}.metric .label{color:var(--muted);font-size:11px;margin-bottom:9px}.metric .number{font-size:20px;font-weight:800;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-group label{display:block;font-size:11px;color:var(--muted);margin:0 0 8px}.field{width:100%;min-width:0;border-radius:12px;border:1px solid #ffffff20;background:#0c0d10;color:var(--text);padding:12px 10px;outline:none}.field:focus{border-color:var(--gold2)}.save{width:100%;margin-top:9px;padding:12px 8px;border-radius:12px;border:1px solid #c9a45d66;background:#d2b36e22;color:var(--gold);font-weight:800;font-size:11px}.save:active{background:#d2b36e44}.setting-note{font-size:10px;color:var(--muted);margin:13px 0 0;line-height:1.5}.connection-status{padding:11px 12px;background:#0b0c10;border:1px solid var(--border);border-radius:12px;color:var(--muted);font-size:12px;margin-bottom:12px;overflow-wrap:anywhere}.primary{width:100%;border:0;border-radius:13px;padding:14px;color:#16130e;background:linear-gradient(120deg,#f3d891,#c69c55);font-weight:900}.danger{width:100%;border:1px solid #fa6b6b55;border-radius:13px;padding:13px;background:#a52e3533;color:#ff8f94;font-weight:800}.pair-label{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}.pair-code{font-weight:800;letter-spacing:1px;text-align:center;font-size:19px;margin-bottom:10px}.info{color:var(--muted);font-size:12px;line-height:1.6}.feedback{font-size:12px;color:var(--gold);margin-top:12px;min-height:17px;overflow-wrap:anywhere}.nav{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#111217f5;backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:12px max(10px,calc((100vw - 540px)/2)) calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr)}.nav button{border:0;background:none;color:#8c8d95;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;padding:0 3px}.nav button.active{color:var(--gold)}.nav svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}.footer{text-align:center;color:#65636a;font-size:10px;margin:15px 0}.hidden{display:none!important}.app-page{display:none}.app-page.active-page{display:block}.nav button{min-height:45px}.nav button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}@media(max-width:370px){main{padding-left:11px;padding-right:11px}.card{padding:15px}.big-money{font-size:34px}.metric .number{font-size:17px}.form-row{grid-template-columns:1fr}}
+/* Compact section headings, without changing MT5 controls */
+.section-head h2{font-size:17px;letter-spacing:-.2px}
+.section-head{margin-bottom:10px}
+.signal-record{padding:12px 0;border-bottom:1px solid #ffffff17;display:flex;flex-direction:column;gap:7px;overflow-wrap:anywhere}
+.signal-record:last-child{border-bottom:0}
+</style>
+
+<style id="seyfx-redesign">
+/* SEY FX official red / white / black inspired visual theme */
+body{background:radial-gradient(ellipse at 80% -10%,rgba(160,15,34,.17),transparent 48%),#08090c}
+main{max-width:540px;padding-top:calc(20px + env(safe-area-inset-top));padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+.header{gap:10px;min-height:48px;margin-bottom:20px}
+.brand{min-width:0;gap:10px}.brand-name{color:#fff;font-weight:900;letter-spacing:.7px;font-style:italic;font-size:22px;white-space:nowrap}.brand-name .fx{color:#ff2535}.brand-sub{letter-spacing:1.1px}
+.mark{width:38px;height:38px;border:1px solid rgba(255,53,69,.35);background:#141416;border-radius:11px;letter-spacing:0}
+.status-pill{flex-shrink:0;border-color:rgba(255,255,255,.13)}
+.card{background:linear-gradient(145deg,#22242a,#141519 85%);border:1px solid rgba(255,255,255,.10);box-shadow:0 12px 30px #0006}
+.hero{border-color:rgba(255,53,69,.24);background:linear-gradient(150deg,#242126,#16171c 80%)}
+.hero:before{background:radial-gradient(circle,rgba(255,37,53,.19),transparent 65%)}
+.big-money{color:#fff;letter-spacing:-1px}.eyebrow{color:#b9b9c0}
+.action{background:linear-gradient(145deg,#24252b,#17181d);border:1px solid rgba(255,37,53,.40);color:#fff;box-shadow:inset 0 1px #ffffff13}
+.action span{color:#ff3545}.action.off{border-color:rgba(255,255,255,.17);color:#e4e4e8}.action.off span{color:#ff5260}
+.action:focus-visible,.save:focus-visible,.primary:focus-visible,.danger:focus-visible{outline:2px solid #ff5260;outline-offset:3px}
+.quote-icon{background:rgba(255,37,53,.12);color:#ff5260}
+.metric{background:linear-gradient(145deg,#222329,#191a1e);border-color:rgba(255,255,255,.09)}
+.metric .number.gold,.gold{color:#ff5260}
+.field{background:#0d0e12}.field:focus{border-color:#ff3545}
+.save{background:rgba(255,37,53,.11);color:#ff7b85;border-color:rgba(255,37,53,.35)}
+.save:active{background:rgba(255,37,53,.22)}
+.primary{background:linear-gradient(120deg,#ff4352,#d71c2f);color:white}
+.nav{background:rgba(14,15,19,.97);border-top:1px solid rgba(255,255,255,.1);padding-top:12px}
+.nav button.active{color:#ff4555}.nav button{min-width:0;line-height:1.2}
+.chart-note{color:#8e9099}
+@media(max-width:370px){.brand-name{font-size:19px}.brand-sub{font-size:8px}.status-pill{padding:7px 8px;font-size:10px}}
+
+/* Mobile layout refinement: keep Telegram controls clear of brand and cards clear of bottom tabs */
+main{padding-top:calc(48px + env(safe-area-inset-top));padding-bottom:calc(125px + env(safe-area-inset-bottom))}
+.header{margin-top:0;margin-bottom:16px;min-height:48px}
+.buttons{margin:0 0 14px;gap:10px}
+.action{padding:13px 7px}
+.hero{margin-bottom:14px}
+.section-head{margin-top:0}
+.metric-grid{margin-bottom:14px}
+#system-status{margin-top:14px;margin-bottom:14px}
+.nav{min-height:72px;padding-top:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom));box-shadow:0 -8px 22px rgba(0,0,0,.30)}
+.nav button{min-height:48px}
+@media(max-width:390px){main{padding-top:calc(58px + env(safe-area-inset-top))}.header{gap:7px}.brand-name{font-size:19px}.brand-sub{font-size:8px}.status-pill{padding:7px 8px}}
+/* Compact spacing: aligned headings, cards and navigation */
+.hero{padding:18px 18px 12px;margin-bottom:10px}
+.hero .big-money{margin:6px 0 5px}
+.chart{height:92px;margin-top:10px}
+.chart-note{margin-top:0}
+.buttons{margin:0 0 10px;gap:10px}
+.action{padding:11px 7px}
+.section-head{margin:0 2px 7px}
+.section-head h2{font-size:16px;line-height:1.25}
+.section-head .small{font-size:10px}
+.quote.card{padding:13px 14px;margin-bottom:12px}
+.quote-icon{width:36px;height:36px;border-radius:12px;font-size:19px}
+.quote-info .value{font-size:15px}
+.metric-grid{gap:9px;margin-bottom:8px}
+.metric{padding:12px 13px;border-radius:15px}
+.metric .label{margin-bottom:5px}
+.metric .number{font-size:18px}
+#system-status{margin-top:10px;margin-bottom:10px}
+#system-status.card{padding:13px 15px}
+.footer{margin:9px 0}
+/* Broker name within Market Overview only */
+#dashboard .broker-line{font-size:11px;color:#ff8996;margin-top:5px;overflow-wrap:anywhere;line-height:1.3}
+/* Market Overview: taller, balanced card with tighter surrounding spacing */
+#dashboard > .section-head{margin-bottom:6px}
+#dashboard > .quote.card{min-height:88px;padding:16px 15px;margin-bottom:9px;gap:11px}
+#dashboard > .quote .quote-icon{width:44px;height:44px}
+#dashboard > .quote .quote-info .value{font-size:15px;line-height:1.25}
+#dashboard > .quote .right{flex-shrink:0;font-size:10px}
+#dashboard > .quote.card + .section-head{margin-top:3px;margin-bottom:7px}
+@media(max-width:370px){#dashboard > .quote.card{padding:14px 11px;gap:8px}#dashboard > .quote .quote-info .value{font-size:13px}#dashboard > .quote .right{font-size:9px}}
+/* Keep fixed tabs from covering last content */
+main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+
+/* Independent Signal preview; no live feed or trading commands */
+.nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:1px}
+.nav button{font-size:9px;padding:0 1px;white-space:nowrap}
+.nav svg{width:20px;height:20px}
+.signal-panel{padding:17px 15px}
+.signal-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.signal-symbol{font-size:24px;font-weight:800;letter-spacing:.4px;margin-bottom:4px}
+.signal-wait{color:#f5c76b;background:#f5c76b17;border:1px solid #f5c76b55;border-radius:11px;padding:10px 14px;font-weight:800}
+.signal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.signal-cell{background:#111216;border:1px solid #ffffff12;border-radius:13px;padding:13px}
+.signal-cell .label{font-size:11px;color:var(--muted);margin-bottom:8px}
+.signal-cell strong{font-size:19px}
+.signal-source{display:flex;align-items:center;gap:8px;margin-top:17px;color:var(--muted);font-size:11px}
+.signal-source .dot{background:#777}
+
+/* Signal history section, reserved for verified backend events */
+.signal-history{margin-top:5px}
+.signal-history .section-head{margin-bottom:9px}
+.signal-history-card{padding:18px 16px;min-height:120px}
+.signal-history-empty{text-align:center;padding:15px 4px;color:var(--muted)}
+.signal-history-empty svg{display:block;margin:0 auto 10px;opacity:.55}
+.signal-history-empty strong{display:block;color:var(--text);font-size:14px;margin-bottom:6px}
+.signal-history-empty p{margin:0;font-size:11px;line-height:1.55}
+
+/* iPhone / Telegram WebView: prevent keyboard focus zoom and horizontal expansion */
+html { width:100%; max-width:100%; overflow-x:clip; -webkit-text-size-adjust:100%; }
+body { width:100%; max-width:100%; min-width:0; overflow-x:clip; }
+main, .app-page, .section, .card, .form-row, .form-group, .signal-panel,
+.signal-grid, .signal-cell, .metric-grid, .metric { min-width:0; max-width:100%; }
+main { width:100%; }
+.form-row { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.form-group { min-width:0; }
+.form-group label { overflow-wrap:anywhere; }
+input.field, input.pair-code, textarea, select { font-size:16px !important; max-width:100%; }
+input.field { display:block; min-width:0; width:100%; }
+button { max-width:100%; touch-action:manipulation; }
+.save { white-space:normal; overflow-wrap:anywhere; }
+.nav { width:100%; max-width:100%; grid-template-columns:repeat(5,minmax(0,1fr)); }
+.nav button { min-width:0; white-space:normal; overflow-wrap:anywhere; }
+@media(max-width:370px) {
+ .form-row { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+ .card { padding:14px; }
+ .form-group .save { font-size:10px; padding:10px 4px; }
+}
+</style>
+
+<style id="seyfx-signal-compact-v2">
+/* Compact Signal view only: leave Dashboard, MT5, Settings and backend untouched. */
+#signal .card{border-radius:17px;margin-bottom:10px}
+#signal .tv-chart-card{padding:10px!important}
+#signal .tv-chart-card .section-head{margin-bottom:7px!important}
+#signal .tv-chart-card .section-head h2{font-size:15px}
+#signal .tv-chart-frame{height:245px!important;border-radius:10px!important}
+#signal .tv-chart-card .setting-note{font-size:9px;line-height:1.4;margin:8px 2px 0}
+#signal .signal-panel{padding:13px 12px}
+#signal .signal-top{margin-bottom:10px}
+#signal .signal-symbol{font-size:19px;margin-bottom:2px}
+#signal .signal-wait{padding:7px 10px;font-size:12px;border-radius:9px}
+#signal .signal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#signal .signal-cell{padding:9px 10px;border-radius:10px}
+#signal .signal-cell .label{font-size:10px;margin-bottom:5px}
+#signal .signal-cell strong{font-size:15px;overflow-wrap:anywhere}
+#signal .signal-source{margin-top:10px;font-size:10px}
+#signal #signalMarketDetails{font-size:10px;line-height:1.4!important}
+#signal .signal-panel .setting-note{font-size:9px;margin-top:8px}
+#signal .signal-history-card{padding:8px 12px;min-height:70px}
+#signal .signal-record{padding:10px 0;gap:5px}
+#signal .signal-record strong{font-size:12px}
+#signal .signal-record .small{font-size:10px;line-height:1.5}
+#signal .signal-record-head{display:flex;justify-content:space-between;align-items:center;gap:7px}
+#signal .signal-outcome{font-size:9px;font-weight:800;border:1px solid #ffffff30;border-radius:8px;padding:4px 7px;white-space:nowrap;color:#a3a5ad}
+#signal .signal-outcome.tp{color:#42d595;border-color:#42d59570}
+#signal .signal-outcome.sl{color:#ff5260;border-color:#ff526070}
+#signal .signal-outcome.active{color:#f5c76b;border-color:#f5c76b70}
+#signal .history-more{display:block;width:100%;border:1px solid #ffffff25;background:#1d1e24;color:#ddd;border-radius:10px;padding:9px;margin-top:10px;font-size:11px}
+@media(max-width:370px){#signal .tv-chart-frame{height:225px!important}#signal .signal-cell strong{font-size:13px}}
+</style>
+<style id="seyfx-pro-analysis">
+#signal .analysis-chart-card{padding:12px;border-radius:16px}#signal .analysis-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}#signal .analysis-top strong{font-size:16px}#signal .analysis-timeframes{display:flex;gap:7px;align-items:center;overflow-x:auto;white-space:nowrap;margin-bottom:10px}#signal .analysis-timeframes span{font-size:10px;border:1px solid #343842;padding:5px 8px;border-radius:6px;color:#a9b0bb}#signal .analysis-timeframes .tf-active{border-color:#00b97d;color:#5cf0b0;background:#073b2d}#signal .sey-price-chart{height:315px;width:100%;position:relative;background:#0b111a;border-radius:8px}#signal .sey-indicator-chart{height:90px;width:100%;background:#0b111a;border-radius:7px;margin-bottom:10px}#signal .indicator-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:10px 0}#signal .indicator-strip div{display:flex;flex-direction:column;gap:4px;background:#111720;border:1px solid #242b35;border-radius:8px;padding:8px 5px;min-width:0}#signal .indicator-strip span{font-size:9px;color:#9ca3af}#signal .indicator-strip b{font-size:11px;overflow:hidden;text-overflow:ellipsis}#signal .indicator-row{display:flex;justify-content:space-between;font-size:11px;margin:9px 2px 5px;color:#b5b9c3}#signal .analysis-panels{display:grid;grid-template-columns:1fr;gap:9px;margin:0 0 12px}#signal .analysis-tile{margin:0;padding:14px!important}#signal .analysis-tile h3{font-size:14px;margin:0 0 12px}#signal .analysis-tile h3 small{float:right;color:#9da5b3;font-weight:400}#signal .analysis-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #ffffff12;font-size:12px}#signal .analysis-kv span{color:#a8abb3}#signal .analysis-kv b{text-align:right;font-size:12px}#signal .price-dist{display:grid;gap:4px;min-height:90px}#signal .dist-row{display:flex;gap:7px;align-items:center}#signal .dist-price{font-size:10px;color:#aab0bc;width:64px;text-align:right}#signal .dist-track{flex:1;background:#141b23;height:10px;border-radius:2px;overflow:hidden}#signal .dist-bar{height:100%;background:#2fc996}#signal .dist-bar.down{background:#e45864}#signal #seyChartMessage{padding:6px 2px;min-height:22px}#signal .signal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}@media(min-width:520px){#signal .analysis-panels{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script defer src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+
+<style id="seyfx-iphone-compact-v3">
+/* Compact iPhone view: four signal cards, no redundant XAUUSD panel. */
+#signal .analysis-chart-card{padding:9px!important;margin-bottom:7px!important;border-radius:13px}
+#signal .analysis-top{margin-bottom:5px!important}
+#signal .analysis-top strong{font-size:14px!important}
+#signal .analysis-top .small{font-size:9px}
+#signal .analysis-timeframes{gap:4px;margin-bottom:5px!important}
+#signal .analysis-timeframes span{font-size:9px;padding:4px 6px}
+#signal .sey-price-chart{height:238px!important;border-radius:5px}
+#signal .sey-indicator-chart{height:58px!important;margin-bottom:4px!important;border-radius:4px}
+#signal .indicator-row{font-size:10px;margin:4px 1px 2px!important}
+#signal .indicator-strip{display:flex;gap:7px;overflow-x:auto;margin:5px 0!important;white-space:nowrap}
+#signal .indicator-strip div{display:inline-flex;flex-direction:row;gap:4px;padding:0;border:0;background:none;align-items:center;flex-shrink:0}
+#signal .indicator-strip span{font-size:9px}#signal .indicator-strip b{font-size:10px}
+#signal #seyChartMessage{min-height:0;padding:3px 1px;font-size:9px}
+#signal .analysis-chart-card>.setting-note{font-size:8px;line-height:1.3;margin:5px 1px 0}
+#signal .sey-compact-signals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:6px 0 5px}
+#signal .sey-mini-card{min-width:0;min-height:82px;border:1px solid #28313a;border-radius:9px;padding:8px 5px;background:linear-gradient(160deg,#111820,#0b1017);display:flex;flex-direction:column;gap:6px;justify-content:flex-start;overflow:hidden}
+#signal .sey-mini-title{font-size:9px;color:#aeb4c0;white-space:nowrap;letter-spacing:-.2px}
+#signal .sey-mini-card>strong{font-size:clamp(10px,2.9vw,15px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.25}
+#signal .sey-mini-card .signal-wait{padding:3px 4px;border-radius:5px;font-size:clamp(10px,3vw,15px);width:fit-content;max-width:100%}
+#signal .sey-mini-foot{font-size:9px;color:#9299a5}
+#signal .sey-mini-tps{gap:4px}#signal .sey-mini-tps>div{display:flex;justify-content:space-between;gap:3px;align-items:center;font-size:9px}#signal .sey-mini-tps>div span{color:#aeb4c0}#signal .sey-mini-tps>div strong{font-size:clamp(9px,2.4vw,12px);color:#42d595;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#signal .sey-feed-compact{display:flex;align-items:center;gap:5px;color:#9299a5;font-size:9px;flex-wrap:wrap;margin:0 2px 8px}#signal .sey-feed-compact #signalMarketDetails{display:none}
+#signal .analysis-panels{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;margin-bottom:8px!important}
+#signal .analysis-tile{min-width:0;padding:8px 5px!important;border-radius:9px!important}
+#signal .analysis-tile h3{font-size:clamp(9px,2.5vw,12px)!important;margin:0 0 6px!important;line-height:1.3;overflow-wrap:anywhere}
+#signal .analysis-tile h3 small{font-size:8px;float:none;display:block}
+#signal .analysis-kv{display:block;padding:4px 0!important;font-size:9px!important;overflow-wrap:anywhere}
+#signal .analysis-kv span{display:block;font-size:9px}#signal .analysis-kv b{display:block;text-align:left;font-size:10px;margin-top:2px}
+#signal .dist-row{gap:2px}#signal .dist-price{font-size:8px;width:39px}#signal .dist-track{height:7px}#signal .price-dist{gap:3px;min-height:0}
+#signal .analysis-tile .setting-note{font-size:8px;line-height:1.3;margin:5px 0 0}
+#signal .signal-history-card{padding:8px!important}
+@media(min-width:520px){#signal .sey-price-chart{height:260px!important}#signal .analysis-panels{gap:8px!important}#signal .analysis-tile{padding:10px!important}}
+@media(max-width:365px){#signal .sey-mini-card{padding:6px 3px}#signal .sey-mini-title{font-size:8px}#signal .analysis-tile h3{font-size:9px!important}}
+</style>
+<style id="seyfx-hide-rsi-macd-panels-v4">
+/* Keep RSI/MACD calculations and Market Analysis, but remove their large chart panels. */
+#signal .indicator-row,
+#signal #seyRsiChart,
+#signal #seyMacdChart { display:none !important; }
+#signal .analysis-chart-card .indicator-strip { margin-bottom:4px !important; }
+</style>
+<style id="seyfx-history-table-v5">
+#signal .signal-history-card{padding:9px 8px;min-height:65px;overflow:hidden}
+#signal .sey-history-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+#signal .sey-history-table{width:100%;min-width:740px;border-collapse:collapse;table-layout:auto;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#signal .sey-history-table th{background:#252b34;color:#bfc4ce;font-size:10px;font-weight:600;text-align:left;padding:9px 8px}
+#signal .sey-history-table th:first-child{border-radius:7px 0 0 7px}
+#signal .sey-history-table th:last-child{border-radius:0 7px 7px 0}
+#signal .sey-history-table td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.10);color:#e6e8ec}
+#signal .sey-history-table tbody tr:last-child td{border-bottom:0}
+#signal .sey-history-table td.sey-history-win{color:#32d994;font-weight:800}
+#signal .sey-history-table td.sey-history-loss{color:#ff5768;font-weight:800}
+#signal .sey-history-table td.sey-history-pending{color:#f2c75a;font-weight:800}
+#signal .history-more{margin-top:7px;padding:9px}
+</style>
+<style id="seyfx-signal-red-history-v6">
+/* Signal-only palette matching the red/black dashboard reference. */
+#signal .analysis-chart-card{background:linear-gradient(145deg,#24161c,#111115 78%);border:1px solid rgba(255,53,69,.38)}
+#signal .analysis-tile,#signal .sey-mini-card,#signal .signal-history-card{background:linear-gradient(150deg,#1c191f,#101014);border:1px solid rgba(255,53,69,.29)}
+#signal .analysis-timeframes .tf-active{background:#e92743;color:#fff;border-color:#f54b62}
+#signal .analysis-timeframes span{border-color:rgba(255,83,105,.23);color:#b9b3bc}
+#signal .sey-price-chart{background:#100c11}
+#signal .analysis-top #analysisFeed{color:#ff6679!important;border:1px solid rgba(255,53,69,.3);border-radius:18px;padding:5px 8px}
+#signal .sey-mini-card{border-radius:12px}
+#signal .analysis-tile{border-radius:12px!important}
+#signal .dist-track{background:#251a20}
+#signal .sey-history-scroll{overflow:visible;width:100%;max-width:100%}
+#signal .sey-history-cards{display:grid;gap:9px}
+#signal .sey-history-item{background:linear-gradient(145deg,#211b22,#121216);border:1px solid rgba(255,68,88,.26);border-radius:13px;padding:11px;min-width:0}
+#signal .sey-history-head{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}
+#signal .sey-history-time{color:#aaa8b0;font-size:10px}
+#signal .sey-history-side{font-size:12px;font-weight:850}
+#signal .sey-history-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 5px}
+#signal .sey-history-field{min-width:0;background:#ffffff06;border-radius:8px;padding:7px 5px}
+#signal .sey-history-field span{display:block;font-size:9px;color:#9fa0aa;margin-bottom:4px}
+#signal .sey-history-field strong{display:block;font-size:clamp(10px,2.7vw,12px);font-weight:700;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#signal .sey-history-result{font-size:10px;font-weight:800;border:1px solid #ffffff2c;border-radius:7px;padding:5px 7px;white-space:nowrap}
+#signal .sey-history-win{color:#42d595!important}#signal .sey-history-loss{color:#ff5260!important}#signal .sey-history-pending{color:#f2c75a!important}
+#signal .history-more{border-color:rgba(255,53,69,.32);background:#21171d;color:#ff8a98}
+</style>
+</head>
+<body>
+<main>
+<header class="header"><div class="brand"><div class="mark" aria-label="SEY FX logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">SEY <span class="fx">FX</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
+<section id="dashboard" class="section app-page active-page">
+<div class="card hero"><div class="eyebrow">Current Account Balance</div><div class="big-money" id="balance">—</div><div class="today"><strong id="profitday">—</strong> <span>Profit today</span></div>
+<svg class="chart" viewBox="0 0 420 120" preserveAspectRatio="none" aria-label="Decorative chart, not live market data"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff3448" stop-opacity=".3"/><stop offset="1" stop-color="#ff3448" stop-opacity="0"/></linearGradient></defs><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12 L420 120 L0 120Z" fill="url(#fill)"/><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12" fill="none" stroke="#ff6572" stroke-width="3.5" stroke-linecap="round"/></svg><div class="chart-note">Illustrative chart • Not live trading history</div></div>
+<div class="buttons"><button class="action" type="button" onclick="bot(true)"><span>↗</span> BOT ON</button><button class="action off" type="button" onclick="bot(false)"><span>↘</span> BOT OFF</button></div>
+<div class="section-head"><h2>Market Overview</h2><span class="small" id="updatedAt">Waiting for MT5</span></div>
+<div class="card quote"><div class="quote-icon">✦</div><div class="quote-info"><div class="name">XAUUSD • Gold Trading</div><div class="value" id="goldStatus">MT5 NOT CONNECTED</div><div class="broker-line" id="marketBroker" hidden></div></div><div class="right" id="botBadge">BOT UNKNOWN</div></div>
+<div class="section-head"><h2>Account Overview</h2><span class="small">MT5 data</span></div>
+<div class="metric-grid"><div class="metric"><div class="label">Equity</div><div class="number" id="equity">—</div></div><div class="metric"><div class="label">Floating P/L</div><div class="number" id="floating">—</div></div><div class="metric"><div class="label">Open Positions</div><div class="number" id="positions">—</div></div><div class="metric"><div class="label">Profit Day</div><div class="number gold" id="profitday2">—</div></div></div>
+</section>
+<section id="signal" class="section app-page" aria-label="SEY FX Signal">
+  <div class="section-head"><h2>SEY FX Signal</h2><span class="small">Independent · M5</span></div>
+  <div class="card analysis-chart-card">
+    <div class="analysis-top"><div><strong>📈 XAUUSD Live Analysis</strong><div class="small">Twelve Data · Closed M5 candles · Read-only</div></div><span id="analysisFeed" class="small">Loading...</span></div>
+    <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
+    <div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 candlestick chart"></div>
+    <div id="seyChartMessage" class="small" role="status">Loading market candles...</div>
+    <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
+    <div class="indicator-row"><span>RSI (14)</span><strong id="rsiCaption">—</strong></div><div id="seyRsiChart" class="sey-indicator-chart"></div>
+    <div class="indicator-row"><span>MACD (12,26,9)</span><strong id="macdCaption">—</strong></div><div id="seyMacdChart" class="sey-indicator-chart"></div>
+    <p class="setting-note">Chart uses the same Twelve Data feed as SEY FX signals. Signals and TP/SL are drawn only when confirmed by the backend. No automatic orders.</p>
+  </div>
+  <!-- Compact signal cards: all original DOM IDs retained for backend refresh -->
+  <div class="sey-compact-signals" aria-label="XAUUSD Signal Summary">
+    <div class="sey-mini-card sey-direction"><span class="sey-mini-title">↗ Signal</span><strong class="signal-wait" id="signalAction">WAIT</strong><span class="sey-mini-foot" id="signalStrength">—</span></div>
+    <div class="sey-mini-card"><span class="sey-mini-title">◎ Entry Price</span><strong id="signalEntry">—</strong><span class="sey-mini-foot">XAUUSD · M5</span></div>
+    <div class="sey-mini-card"><span class="sey-mini-title">⬟ Stop Loss</span><strong id="signalSL" class="red">—</strong><span class="sey-mini-foot">Risk level</span></div>
+    <div class="sey-mini-card sey-mini-tps"><span class="sey-mini-title">◉ Take Profit</span><div><span>TP1</span><strong id="signalTP1">—</strong></div><div><span>TP2</span><strong id="signalTP2">—</strong></div><div><span>TP3</span><strong id="signalTP3">—</strong></div></div>
+  </div>
+  <div class="sey-feed-compact"><span class="dot" id="signalDot"></span><span id="signalSourceText">Connecting to market data...</span><span id="signalMarketDetails"></span></div>
+  <div class="analysis-panels">
+    <div class="card analysis-tile"><h3>🧠 Market Analysis <small>M5</small></h3><div class="analysis-kv"><span>Trend</span><b id="aTrend">—</b></div><div class="analysis-kv"><span>Momentum</span><b id="aMomentum">—</b></div><div class="analysis-kv"><span>RSI (14)</span><b id="aRsiState">—</b></div><div class="analysis-kv"><span>MACD</span><b id="aMacdState">—</b></div><div class="analysis-kv"><span>ATR (14)</span><b id="aAtr">—</b></div></div>
+    <div class="card analysis-tile"><h3>📊 Price Distribution <small>Proxy</small></h3><div id="priceDist" class="price-dist"></div><p class="setting-note">Candle-range frequency proxy; not exchange volume or volume profile.</p></div>
+    <div class="card analysis-tile"><h3>⚖️ Risk / Reward</h3><div class="analysis-kv"><span>Stop risk</span><b id="aRisk">—</b></div><div class="analysis-kv"><span>TP1</span><b id="aRR1">—</b></div><div class="analysis-kv"><span>TP2</span><b id="aRR2">—</b></div><div class="analysis-kv"><span>TP3</span><b id="aRR3">—</b></div><p class="setting-note" id="aWaitReason">Waiting for analysis</p></div>
+  </div>
+  <div class="signal-history" aria-label="Signal History">
+    <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
+    <div class="card signal-history-card">
+      <div id="signalHistoryList" aria-live="polite"></div><button id="signalHistoryMore" class="history-more hidden" type="button" onclick="toggleSignalHistory()">Show More</button>
+      <div class="signal-history-empty" id="signalHistoryEmpty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
+        <strong>No signals yet</strong>
+        <p>Verified BUY / SELL signals will appear here when signal generation and history are enabled. No demo or invented trades.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="settings" class="section app-page">
+  <div class="section-head"><h2>Bot Settings</h2><span class="small">Control your EA</span></div>
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group"><label for="profitInput">Pair Profit Target ($)</label><input class="field" id="profitInput" type="number" min="0.01" max="100000" step="0.01" inputmode="decimal" placeholder="e.g. 5"><button class="save" type="button" onclick="saveProfit()">SAVE PROFIT</button></div>
+      <div class="form-group"><label for="gridInput">Re-entry Distance (points)</label><input class="field" id="gridInput" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 5000"><button class="save" type="button" onclick="saveGrid()">SAVE DISTANCE</button></div>
+      <div class="form-group"><label for="lotInput">Start Lot</label><input class="field" id="lotInput" type="number" min="0.01" max="100" step="0.01" inputmode="decimal" placeholder="e.g. 0.02"><button class="save" type="button" onclick="saveLot()">SAVE LOT</button></div>
+      <div class="form-group"><label for="maxOrdersInput">Max Orders (Total)</label><input class="field" id="maxOrdersInput" type="number" min="1" max="1000" step="1" inputmode="numeric" placeholder="e.g. 20"><button class="save" type="button" onclick="saveMaxOrders()">SAVE MAX ORDERS</button></div>
+    </div>
+    <p class="setting-note">Start Lot applies to new orders; subsequent lots increase by the EA's configured increment. Max Orders counts BUY + SELL together. Broker lot rules, EA Max Lot, and safety limits still apply. New Lot / Max Orders commands require the backend update before they can be used.</p>
+    <p class="setting-note">A successful request means queued, not yet confirmed by the EA. Test on a demo account first.</p>
+    <div class="feedback" id="settingStatus" role="status" aria-live="polite"></div>
+  </div>
+</section>
+<section id="history" class="section app-page"><div class="section-head"><h2>Trading History</h2><span class="small">MT5 records</span></div><div class="card"><div class="quote"><div class="quote-icon">◷</div><div class="quote-info"><div class="name">Profit today</div><div class="value gold" id="historyProfitDay">—</div></div></div><p class="info">Full closed-trade history is not available from the current Mini App API. This page shows today's reported profit only; no sample trades are presented as real records.</p><button class="save" type="button" onclick="refresh()">REFRESH PROFIT</button></div></section>
+<section id="connect-mt5" class="section app-page"><div class="section-head"><h2>Connect MT5</h2><span class="small">Account pairing</span></div><div class="card"><div class="connection-status" id="pairStatus">Checking MT5 connection...</div><div id="pairingForm"><p class="info">Generate a pairing code, then enter it in your MT5 Bridge EA. Code expires after 5 minutes. Keep it private.</p><label class="pair-label" for="pairingCode">PAIRING CODE</label><input class="field pair-code" id="pairingCode" type="text" placeholder="XXXX-XXXX-XXXX" readonly autocomplete="off"><button class="primary" id="connectMt5Btn" type="button" onclick="connectMT5()">GENERATE PAIRING CODE</button></div><button class="danger hidden" id="disconnectMt5Btn" type="button" onclick="disconnectMT5()">DISCONNECT MT5</button></div></section>
+<div class="card app-page active-page" id="system-status"><div class="section-head" style="margin:0 0 8px"><h2 style="font-size:15px">System Status</h2><button type="button" class="save" style="width:auto;margin:0;padding:8px 12px" onclick="refresh()">REFRESH</button></div><div class="info" id="status" role="status">Checking MT5 connection...</div></div>
+<div class="footer">SEY FX • MT5 TRADING CONTROL</div>
+</main>
+<nav class="nav" aria-label="Main navigation">
+<button class="active" type="button" data-page="dashboard" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+<button type="button" data-page="signal" onclick="go('signal',this)"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Signal</button>
+<button type="button" data-page="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Settings</button>
+<button type="button" data-page="history" onclick="go('history',this)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>History</button>
+<button type="button" data-page="connect-mt5" onclick="go('connect-mt5',this)"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0-7 7l1.2-1.2"/></svg>Connect MT5</button>
+</nav>
+<script>
+'use strict';
+const API_BASE='https://sey-fx-customer-backend-1.onrender.com';
+const tg=window.Telegram?.WebApp;
+const telegramInitData=tg?.initData||'';
+if(tg){tg.ready();tg.expand();}
+const el=id=>document.getElementById(id);
+const money=n=>Number.isFinite(Number(n))?'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+let refreshing=false;
+let lastAccount=null;
+function go(id,button){document.querySelectorAll('.app-page').forEach(page=>page.classList.toggle('active-page',page.id===id || (page.id==='system-status' && id==='dashboard')));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b===button));window.scrollTo({top:0,behavior:'instant'});}
+function setConnected(connected){el('pairingForm').classList.toggle('hidden',connected);el('disconnectMt5Btn').classList.toggle('hidden',!connected);el('liveStatus').classList.toggle('online',connected);el('liveLabel').textContent=connected?'ONLINE':'OFFLINE';el('goldStatus').textContent=connected?'MT5 CONNECTED':'MT5 NOT CONNECTED';el('pairStatus').textContent=connected?'✓ MT5 CONNECTED':'MT5 NOT CONNECTED';}
+function showMarketBroker(status){
+  const target=el('marketBroker');
+  // Only show a verified server supplied by the MT5 bridge; never guess from account ID.
+  const server=[status?.server,status?.serverName,status?.mt5Server,status?.accountServer,status?.tradeServer]
+    .find(v=>typeof v==='string'&&v.trim());
+  if(!server){target.hidden=true;target.textContent='';return;}
+  const names={
+    'dupoininternational-real':'Dupoin',
+    'commot-live':'COMMOT',
+    'superfin-server':'SuperFin',
+    'kvbprimelimited-real':'KVB Prime'
+  };
+  target.textContent='Broker: '+(names[server.trim().toLowerCase()]||server.trim());
+  target.hidden=false;
+}
+function clearData(){showMarketBroker(null);['balance','profitday','profitday2','historyProfitDay','equity','floating','positions'].forEach(id=>el(id).textContent='—');el('botBadge').textContent='BOT UNKNOWN';el('botBadge').className='right';el('updatedAt').textContent='Waiting for MT5';}
+async function request(path,options={}){if(!telegramInitData)throw Error('Open this Mini App inside Telegram');const headers={'x-telegram-init-data':telegramInitData,...(options.body?{'Content-Type':'application/json'}:{})};const res=await fetch(API_BASE+path,{...options,headers:{...headers,...options.headers},cache:'no-store'});const data=await res.json().catch(()=>({}));if(!res.ok)throw Error(data.error||'HTTP '+res.status);return data;}
+async function accounts(){const data=await request('/api/accounts');return Array.isArray(data.accounts)?data.accounts:[];}
+async function singleAccount(){const list=await accounts();if(list.length!==1)throw Error('Please connect exactly one MT5 account');return list[0];}
+async function refresh(){if(refreshing)return;refreshing=true;try{const list=await accounts();lastAccount=list.length===1?list[0]:null;if(!lastAccount){setConnected(false);clearData();el('status').textContent=list.length?'Multiple MT5 accounts found; expected one.':'NO MT5 ACCOUNT FOUND';return;}setConnected(true);if(!lastAccount.status){clearData();el('status').textContent='MT5 ACCOUNT FOUND — WAITING FOR STATUS';el('updatedAt').textContent='Waiting for Bridge';return;}const s=lastAccount.status;showMarketBroker(s);el('balance').textContent=money(s.balance);el('equity').textContent=money(s.equity);el('positions').textContent=s.positions??'—';const fl=Number(s.floatingPL);el('floating').textContent=money(s.floatingPL);el('floating').className='number '+(Number.isFinite(fl)?fl<0?'red':'green':'');el('profitday').textContent=money(s.profitday??s.profitDay);el('profitday2').textContent=money(s.profitday??s.profitDay);el('historyProfitDay').textContent=money(s.profitday??s.profitDay);const enabled=lastAccount.botEnabled??s.botEnabled;el('botBadge').textContent=enabled===true?'● BOT ON':enabled===false?'● BOT OFF':'BOT UNKNOWN';el('botBadge').style.color=enabled===true?'var(--green)':enabled===false?'var(--red)':'var(--muted)';el('status').textContent=enabled===true?'🟢 BOT ON':enabled===false?'🔴 BOT OFF':'⚪ BOT STATUS UNKNOWN';el('updatedAt').textContent='Updated '+new Date().toLocaleTimeString();}catch(e){el('status').textContent='Connection error: '+e.message;el('updatedAt').textContent='Update failed';}finally{refreshing=false;}}
+async function bot(on){try{el('status').textContent=on?'Sending BOT ON...':'Sending BOT OFF...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action:on?'bot_on':'bot_off'})});if(!data.ok)throw Error(data.error||'Command failed');el('status').textContent='Command queued — waiting for MT5 confirmation';setTimeout(refresh,1200);}catch(e){el('status').textContent='Error: '+e.message;}}
+async function saveSetting(action,id){const input=el(id);if(input.value.trim()==='')return alert('Enter a value first');const value=Number(input.value);if(!Number.isFinite(value)||value<=0||(action==='set_profit'&&value>100000)||(action==='set_grid'&&(!Number.isInteger(value)||value>1000000))||(action==='set_lot'&&value>100)||(action==='set_max_orders'&&(!Number.isInteger(value)||value>1000)))return alert('Enter a valid value');const feedback=el('settingStatus');try{feedback.textContent='Sending setting...';const account=await singleAccount();const data=await request('/api/command',{method:'POST',body:JSON.stringify({accountId:account.accountId,action,value})});if(!data.ok)throw Error(data.error||'Save failed');feedback.textContent='✓ Setting queued. Check MT5 Experts log for confirmation.';}catch(e){feedback.textContent='Error: '+e.message;}}
+function saveProfit(){return saveSetting('set_profit','profitInput');}
+function saveGrid(){return saveSetting('set_grid','gridInput');}
+function saveLot(){return saveSetting('set_lot','lotInput');}
+function saveMaxOrders(){return saveSetting('set_max_orders','maxOrdersInput');}
+async function connectMT5(){const btn=el('connectMt5Btn');btn.disabled=true;try{el('pairStatus').textContent='Generating pairing code...';const data=await request('/api/pair/start',{method:'POST',body:JSON.stringify({})});if(!data.code)throw Error('Pairing code missing');el('pairingCode').value=data.code;el('pairStatus').textContent='Code generated. Expires in 5 minutes.';}catch(e){el('pairStatus').textContent='Error: '+e.message;}finally{btn.disabled=false;}}
+async function disconnectMT5(){if(!confirm('Disconnect your MT5 account? This does not automatically close open trades.'))return;const btn=el('disconnectMt5Btn');btn.disabled=true;try{const account=await singleAccount();await request('/api/accounts/disconnect',{method:'POST',body:JSON.stringify({accountId:String(account.accountId)})});setConnected(false);clearData();el('pairStatus').textContent='MT5 disconnected. You can pair another account.';el('status').textContent='MT5 disconnected';await refresh();}catch(e){el('pairStatus').textContent='Error: '+e.message;}finally{btn.disabled=false;}}
+// Independent XAUUSD M5 feed. Read-only; never sends trading commands.
+let signalRefreshing=false;
+function signalPrice(value){const n=Number(value);return value!==null&&value!==undefined&&value!==''&&Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:3}):'—';}
+function signalReset(message){
+  const action=el('signalAction');
+  action.textContent='WAIT';
+  action.style.color='#f5c76b';action.style.borderColor='#f5c76b55';action.style.background='#f5c76b17';
+  el('signalEntry').textContent='—';['signalTP1','signalTP2','signalTP3'].forEach(id=>el(id).textContent='—');
+  el('signalSL').textContent='—';el('signalStrength').textContent='—';
+  el('signalSourceText').textContent=message;
+  el('signalMarketDetails').textContent='';el('signalDot').style.background='#777';
+}
+function validSignalNumber(v){return v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v))&&Number(v)>0;}
+async function refreshSignal(){
+  if(signalRefreshing||!telegramInitData)return;
+  signalRefreshing=true;
+  try{
+    const data=await request('/api/market/xauusd/m5');
+    const candles=Array.isArray(data.candles)?data.candles:[];
+    renderProfessionalAnalysis(data);
+    if(!candles.length||!validSignalNumber(data.lastClose))throw Error('No valid market candles available');
+    const side=String(data.signal||'WAIT').toUpperCase();
+    const active=data.signalActive===true && (side==='BUY'||side==='SELL') &&
+      validSignalNumber(data.entry) && validSignalNumber(data.takeProfit) && validSignalNumber(data.stopLoss) &&
+      (side==='BUY'? Number(data.stopLoss)<Number(data.entry)&&Number(data.entry)<Number(data.takeProfit):
+        Number(data.takeProfit)<Number(data.entry)&&Number(data.entry)<Number(data.stopLoss));
+    const action=el('signalAction');
+    action.textContent=active?side:'WAIT';
+    const color=active?(side==='BUY'?'#42d595':'#ff5260'):'#f5c76b';
+    action.style.color=color;action.style.borderColor=color+'88';action.style.background=color+'17';
+    el('signalEntry').textContent=active?signalPrice(data.entry):'—';
+    ['tp1','tp2','tp3'].forEach((key,i)=>el('signalTP'+(i+1)).textContent=active?signalPrice(data[key]):'—');
+    el('signalSL').textContent=active?signalPrice(data.stopLoss):'—';
+    const strength=Number(data.strength);
+    el('signalStrength').textContent=active&&data.strength!==null&&data.strength!==undefined&&Number.isFinite(strength)&&strength>=0&&strength<=100?Math.round(strength)+'%':'—';
+    el('signalSourceText').textContent='Market data connected · '+String(data.source||'Market feed');
+    el('signalMarketDetails').textContent='Last XAUUSD price: '+signalPrice(data.lastClose)+' · Latest M5 candle: '+String(data.lastCandleTime||'Unknown')+(data.cached?' · Cached':'');
+    el('signalDot').style.background='var(--green)';
+  }catch(err){signalReset('Market data unavailable: '+err.message);}
+  finally{signalRefreshing=false;}
+}
+
+// Show only records from backend. Optional outcome labels appear only when backend provides them.
+let signalHistoryExpanded=false;
+let signalHistoryCache=[];
+function toggleSignalHistory(){signalHistoryExpanded=!signalHistoryExpanded;renderSignalHistory();}
+function renderSignalHistory(){
+  const list=el('signalHistoryList'),empty=el('signalHistoryEmpty'),more=el('signalHistoryMore');
+  const signals=signalHistoryCache.filter(item=>['BUY','SELL'].includes(String(item.side).toUpperCase()));
+  list.replaceChildren();empty.style.display=signals.length?'none':'';
+  more.classList.toggle('hidden',signals.length<=5);
+  more.textContent=signalHistoryExpanded?'Show Less':'View All ('+signals.length+')';
+  if(!signals.length)return;
+  const wrap=document.createElement('div');wrap.className='sey-history-cards';
+  const price=v=>{if(v===null||v===undefined||v==='')return '—';const n=Number(v);return Number.isFinite(n)?n.toFixed(3):'—';};
+  for(const item of (signalHistoryExpanded?signals:signals.slice(0,5))){
+    const side=String(item.side).toUpperCase();
+    const date=new Date(item.occurredAt);
+    const time=Number.isNaN(date.getTime())?'—':date.toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+    const raw=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
+    let result='—',statusClass='';
+    if(/STOP LOSS|SL HIT|SL REACHED/.test(raw)){result='SL ✕';statusClass='sey-history-loss';}
+    else if(/TP3 HIT/.test(raw)){result='TP3 ✓';statusClass='sey-history-win';}
+    else if(/TP2 HIT/.test(raw)){result='TP2 ✓';statusClass='sey-history-win';}
+    else if(/TP1 HIT/.test(raw)){result='TP1 ✓';statusClass='sey-history-win';}
+    else if(/TAKE PROFIT|TP HIT|TP REACHED/.test(raw)){result='TP ✓';statusClass='sey-history-win';}
+    else if(/AMBIGUOUS/.test(raw)){result='CHECK';statusClass='sey-history-pending';}
+    else if(/WAITING ENTRY/.test(raw)){result='PENDING';statusClass='sey-history-pending';}
+    else if(/ACTIVE|ENTRY HIT|OPEN/.test(raw)){result='OPEN';statusClass='sey-history-pending';}
+    const card=document.createElement('article');card.className='sey-history-item';
+    const head=document.createElement('div');head.className='sey-history-head';
+    const left=document.createElement('div');
+    const sideNode=document.createElement('strong');sideNode.className='sey-history-side '+(side==='BUY'?'sey-history-win':'sey-history-loss');sideNode.textContent=side;
+    const timeNode=document.createElement('div');timeNode.className='sey-history-time';timeNode.textContent=time;
+    left.append(sideNode,timeNode);
+    const resultNode=document.createElement('span');resultNode.className='sey-history-result '+statusClass;resultNode.textContent=result;
+    head.append(left,resultNode);card.append(head);
+    const fields=document.createElement('div');fields.className='sey-history-fields';
+    [['Entry',item.entry],['SL',item.stopLoss],['TP1',item.tp1],['TP2',item.tp2],['TP3',item.tp3]].forEach(([label,value])=>{
+      const field=document.createElement('div');field.className='sey-history-field';
+      const labelNode=document.createElement('span');labelNode.textContent=label;
+      const valueNode=document.createElement('strong');valueNode.textContent=price(value);
+      field.append(labelNode,valueNode);fields.append(field);
+    });
+    // Preserve backend TP milestones without concealing a later stop-loss outcome.
+    const hits=[['TP1',item.hitTp1??item.hit_tp1],['TP2',item.hitTp2??item.hit_tp2],['TP3',item.hitTp3??item.hit_tp3]]
+      .filter(([,v])=>v===true).map(([name])=>name+' ✓');
+    if(hits.length){const hitField=document.createElement('div');hitField.className='sey-history-field';const lab=document.createElement('span');lab.textContent='Reached';const val=document.createElement('strong');val.className='sey-history-win';val.textContent=hits.join(' · ');hitField.append(lab,val);fields.append(hitField);}
+    card.append(fields);wrap.append(card);
+  }
+  list.append(wrap);
+}
+async function refreshSignalHistory(){
+  if(!telegramInitData)return;
+  try{
+    const data=await request('/api/signals/history');
+    signalHistoryCache=Array.isArray(data.signals)?data.signals:[];
+    renderSignalHistory();
+  }catch(e){
+    signalHistoryCache=[];renderSignalHistory();
+    el('signalHistoryEmpty').querySelector('p').textContent='Signal history unavailable: '+e.message;
+  }
+}
+refreshSignalHistory();setInterval(refreshSignalHistory,60000);
+
+refreshSignal();setInterval(refreshSignal,60000);
+refresh();setInterval(refresh,1500);
+
+// SEY FX Professional Analysis: same read-only market data as signal endpoint.
+let seyChart,seyCandles,seyEma20,seyEma50,seyEma200,seyRsiChart,seyMacdChart,seyRsiLine,seyMacdLine,seySignalLines=[];
+let seyLastMarket=null;
+function emaCalc(values,p){let result=Array(values.length).fill(null);if(values.length<p)return result;let v=values.slice(0,p).reduce((a,b)=>a+b,0)/p;result[p-1]=v;const k=2/(p+1);for(let i=p;i<values.length;i++){v=values[i]*k+v*(1-k);result[i]=v;}return result;}
+function rsiCalc(values,p=14){let out=Array(values.length).fill(null),g=0,l=0;if(values.length<=p)return out;for(let i=1;i<=p;i++){let d=values[i]-values[i-1];g+=Math.max(d,0);l+=Math.max(-d,0);}g/=p;l/=p;out[p]=l===0?(g===0?50:100):100-100/(1+g/l);for(let i=p+1;i<values.length;i++){let d=values[i]-values[i-1];g=(g*(p-1)+Math.max(d,0))/p;l=(l*(p-1)+Math.max(-d,0))/p;out[i]=l===0?(g===0?50:100):100-100/(1+g/l);}return out;}
+function timeUTC(v){if(!/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(v))return null;const t=Date.parse(v.replace(' ','T')+'Z');return Number.isFinite(t)?Math.floor(t/1000):null;}
+function chartOptions(height){return {height,layout:{background:{type:'solid',color:'#100c11'},textColor:'#aab4c2',fontSize:10},grid:{vertLines:{color:'#291923'},horzLines:{color:'#291923'}},rightPriceScale:{borderColor:'#303744'},timeScale:{borderColor:'#303744',timeVisible:true,secondsVisible:false},crosshair:{mode:1},handleScroll:true,handleScale:true};}
+function ensureCharts(){if(seyChart)return true;if(!window.LightweightCharts)return false;const lib=window.LightweightCharts;const root=el('seyPriceChart');seyChart=lib.createChart(root,{...chartOptions(238),width:root.clientWidth||320});seyCandles=seyChart.addCandlestickSeries({upColor:'#18c991',downColor:'#f05b65',wickUpColor:'#18c991',wickDownColor:'#f05b65',borderVisible:false});seyEma20=seyChart.addLineSeries({color:'#3298ff',lineWidth:2,priceLineVisible:false,lastValueVisible:false});seyEma50=seyChart.addLineSeries({color:'#f2a23d',lineWidth:2,priceLineVisible:false,lastValueVisible:false});seyEma200=seyChart.addLineSeries({color:'#ddd',lineWidth:1,priceLineVisible:false,lastValueVisible:false});const r=el('seyRsiChart');seyRsiChart=lib.createChart(r,{...chartOptions(58),width:r.clientWidth||320,timeScale:{visible:false},rightPriceScale:{visible:true,borderVisible:false}});seyRsiLine=seyRsiChart.addLineSeries({color:'#a26aff',lineWidth:2,priceLineVisible:false});const m=el('seyMacdChart');seyMacdChart=lib.createChart(m,{...chartOptions(58),width:m.clientWidth||320,timeScale:{visible:false},rightPriceScale:{visible:true,borderVisible:false}});seyMacdLine=seyMacdChart.addLineSeries({color:'#25c3f5',lineWidth:2,priceLineVisible:false});if(window.ResizeObserver){const obs=new ResizeObserver(()=>{for(const [ch,id] of [[seyChart,'seyPriceChart'],[seyRsiChart,'seyRsiChart'],[seyMacdChart,'seyMacdChart']])ch.applyOptions({width:el(id).clientWidth||320});});['seyPriceChart','seyRsiChart','seyMacdChart'].forEach(id=>obs.observe(el(id)));}return true;}
+function valueAt(v){return Number.isFinite(v)?v.toFixed(2):'—';}
+function setAnalysis(id,value,color){const e=el(id);if(!e)return;e.textContent=value;if(color)e.style.color=color;}
+function renderProfessionalAnalysis(data){seyLastMarket=data;const input=Array.isArray(data.candles)?data.candles:[];const candles=input.map(c=>({...c,open:Number(c.open),high:Number(c.high),low:Number(c.low),close:Number(c.close),time:timeUTC(c.time)})).filter(c=>c.time&&[c.open,c.high,c.low,c.close].every(Number.isFinite)).sort((a,b)=>a.time-b.time);const uniq=candles.filter((c,i)=>!i||c.time!==candles[i-1].time);if(uniq.length<55){setAnalysis('seyChartMessage','Not enough market candles');return;}const closed=uniq.slice(0,-1);const closes=closed.map(c=>c.close),ema20=emaCalc(closes,20),ema50=emaCalc(closes,50),ema200=emaCalc(closes,200),rsi=rsiCalc(closes),macdFast=emaCalc(closes,12),macdSlow=emaCalc(closes,26);const macd=closes.map((_,i)=>macdFast[i]!==null&&macdSlow[i]!==null?macdFast[i]-macdSlow[i]:null);const latest=closes.length-1;const f=ema20[latest],s=ema50[latest],r=rsi[latest],m=macd[latest];const color=f>s?'#42d595':'#ff5260';setAnalysis('aEma20',valueAt(f));setAnalysis('aEma50',valueAt(s));setAnalysis('aEma200',valueAt(ema200[latest]));setAnalysis('aRsi',valueAt(r));setAnalysis('rsiCaption',valueAt(r));setAnalysis('macdCaption',valueAt(m));setAnalysis('aTrend',f>s?'UPTREND':'DOWNTREND',color);setAnalysis('aMomentum',r>55?'BULLISH':r<45?'BEARISH':'NEUTRAL',r>55?'#42d595':r<45?'#ff5260':'#e9c36c');setAnalysis('aRsiState',r>70?'OVERBOUGHT':r<30?'OVERSOLD':r>=50?'BULLISH':'BEARISH');setAnalysis('aMacdState',m>0?'BULLISH':'BEARISH',m>0?'#42d595':'#ff5260');let tr=[];for(let i=1;i<closed.length;i++){const c=closed[i],p=closed[i-1];tr.push(Math.max(c.high-c.low,Math.abs(c.high-p.close),Math.abs(c.low-p.close)));}setAnalysis('aAtr',valueAt(tr.slice(-14).reduce((a,b)=>a+b,0)/14));const active=data.signalActive===true&&['BUY','SELL'].includes(data.signal)&&[data.entry,data.stopLoss,data.tp1,data.tp2,data.tp3].every(v=>Number.isFinite(Number(v))&&Number(v)>0);if(active){const risk=Math.abs(Number(data.entry)-Number(data.stopLoss));setAnalysis('aRisk',valueAt(risk)+' USD');for(let i=1;i<=3;i++)setAnalysis('aRR'+i,valueAt(Math.abs(Number(data['tp'+i])-Number(data.entry))/risk)+' R');setAnalysis('aWaitReason','Signal based on closed M5 candle');}else{['aRisk','aRR1','aRR2','aRR3'].forEach(id=>setAnalysis(id,'—'));setAnalysis('aWaitReason',data.waitReason||'No confirmed setup on the latest closed M5 candle');}
+// Frequency of candle range intersections; not traded volume.
+const sample=closed.slice(-80),lo=Math.min(...sample.map(c=>c.low)),hi=Math.max(...sample.map(c=>c.high)),dist=el('priceDist');dist.replaceChildren();const n=9,step=(hi-lo)/n||1;const counts=Array.from({length:n},(_,i)=>sample.filter(c=>c.low<=lo+(i+1)*step&&c.high>=lo+i*step).length);const max=Math.max(...counts,1);for(let i=n-1;i>=0;i--){const row=document.createElement('div');row.className='dist-row';const label=document.createElement('span');label.className='dist-price';label.textContent=valueAt(lo+(i+.5)*step);const track=document.createElement('div');track.className='dist-track';const bar=document.createElement('div');bar.className='dist-bar'+(i<n/2?' down':'');bar.style.width=(counts[i]/max*100)+'%';track.append(bar);row.append(label,track);dist.append(row);}
+if(!ensureCharts()){setAnalysis('seyChartMessage','Chart library unavailable; analysis values remain available.');return;}const series=(vals)=>vals.flatMap((v,i)=>Number.isFinite(v)?[{time:closed[i].time,value:v}]:[]);seyCandles.setData(closed.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));seyEma20.setData(series(ema20));seyEma50.setData(series(ema50));seyEma200.setData(series(ema200));seyRsiLine.setData(series(rsi));seyMacdLine.setData(series(macd));seySignalLines.forEach(line=>seyCandles.removePriceLine(line));seySignalLines=[];if(active){const levels=[['Entry',data.entry,'#f1f1f1'],['SL',data.stopLoss,'#f05b65'],['TP1',data.tp1,'#23c88b'],['TP2',data.tp2,'#23c88b'],['TP3',data.tp3,'#23c88b']];for(const [title,price,c] of levels){seySignalLines.push(seyCandles.createPriceLine({price:Number(price),color:c,lineWidth:1,lineStyle:2,axisLabelVisible:true,title}));}const t=timeUTC(data.signalCandleTime);if(t&&closed.some(c=>c.time===t)){seyCandles.setMarkers([{time:t,position:data.signal==='BUY'?'belowBar':'aboveBar',color:data.signal==='BUY'?'#2ce69e':'#f05b65',shape:data.signal==='BUY'?'arrowUp':'arrowDown',text:data.signal}]);}else seyCandles.setMarkers([]);}else seyCandles.setMarkers([]);seyChart.timeScale().fitContent();seyRsiChart.timeScale().fitContent();seyMacdChart.timeScale().fitContent();setAnalysis('analysisFeed',data.cached?'CACHED':'LIVE FEED',data.cached?'#e9c36c':'#42d595');setAnalysis('seyChartMessage','Last closed M5 candle: '+String(closed[latest]?.time?new Date(closed[latest].time*1000).toISOString().slice(0,16).replace('T',' ')+' UTC':'—'));
+}
+
+</script>
+</body>
+</html>
