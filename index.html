@@ -251,6 +251,8 @@ button { max-width:100%; touch-action:manipulation; }
 #signal .sey-history-result{font-size:10px;font-weight:800;border:1px solid #ffffff2c;border-radius:7px;padding:5px 7px;white-space:nowrap}
 #signal .sey-history-win{color:#42d595!important}#signal .sey-history-loss{color:#ff5260!important}#signal .sey-history-pending{color:#f2c75a!important}
 #signal .history-more{border-color:rgba(255,53,69,.32);background:#21171d;color:#ff8a98}
+/* Remove duplicate outer History frame; retain each trade card. */
+#signal .signal-history-card{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;min-height:0!important;overflow:visible!important}
 </style>
 
 </head>
@@ -294,7 +296,7 @@ button { max-width:100%; touch-action:manipulation; }
   </div>
   <div class="signal-history" aria-label="Signal History">
     <div class="section-head"><h2>Signal History</h2><span class="small">XAUUSD · M5</span></div>
-    <div class="card signal-history-card">
+    <div class="signal-history-card">
       <div id="signalHistoryList" aria-live="polite"></div><button id="signalHistoryMore" class="history-more hidden" type="button" onclick="toggleSignalHistory()">Show More</button>
       <div class="signal-history-empty" id="signalHistoryEmpty">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
