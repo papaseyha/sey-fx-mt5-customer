@@ -272,6 +272,7 @@ button { max-width:100%; touch-action:manipulation; }
     <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
     <div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 candlestick chart"></div>
     <div id="seyChartMessage" class="small" role="status">Loading market candles...</div>
+    <div id="signalFeedAge" class="small" style="font-size:10px;margin:2px 1px 4px;color:#a3a5ad" aria-live="off">Waiting for feed</div>
     <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
     <div class="indicator-row"><span>RSI (14)</span><strong id="rsiCaption">—</strong></div><div id="seyRsiChart" class="sey-indicator-chart"></div>
     <div class="indicator-row"><span>MACD (12,26,9)</span><strong id="macdCaption">—</strong></div><div id="seyMacdChart" class="sey-indicator-chart"></div>
@@ -370,6 +371,16 @@ async function connectMT5(){const btn=el('connectMt5Btn');btn.disabled=true;try{
 async function disconnectMT5(){if(!confirm('Disconnect your MT5 account? This does not automatically close open trades.'))return;const btn=el('disconnectMt5Btn');btn.disabled=true;try{const account=await singleAccount();await request('/api/accounts/disconnect',{method:'POST',body:JSON.stringify({accountId:String(account.accountId)})});setConnected(false);clearData();el('pairStatus').textContent='MT5 disconnected. You can pair another account.';el('status').textContent='MT5 disconnected';await refresh();}catch(e){el('pairStatus').textContent='Error: '+e.message;}finally{btn.disabled=false;}}
 // Independent XAUUSD M5 feed. Read-only; never sends trading commands.
 let signalRefreshing=false;
+let signalLastFetchedAt=0;
+function updateSignalFeedAge(){
+  const node=document.getElementById("signalFeedAge");
+  if(!node)return;
+  if(!signalLastFetchedAt){node.textContent="Waiting for feed";return;}
+  const seconds=Math.max(0,Math.floor((Date.now()-signalLastFetchedAt)/1000));
+  node.textContent="Feed age: "+seconds+"s"+(seconds>75?" · DELAYED":"");
+  node.style.color=seconds>75?"#ff5260":"#a3a5ad";
+}
+
 function signalPrice(value){const n=Number(value);return value!==null&&value!==undefined&&value!==''&&Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:3}):'—';}
 function signalReset(message){
   const action=el('signalAction');
@@ -386,6 +397,8 @@ async function refreshSignal(){
   signalRefreshing=true;
   try{
     const data=await request('/api/market/xauusd/m5');
+    const fetched=Date.parse(data.fetchedAt||'');
+    if(Number.isFinite(fetched)){signalLastFetchedAt=fetched;updateSignalFeedAge();}
     const candles=Array.isArray(data.candles)?data.candles:[];
     renderProfessionalAnalysis(data);
     if(!candles.length||!validSignalNumber(data.lastClose))throw Error('No valid market candles available');
@@ -473,7 +486,8 @@ async function refreshSignalHistory(){
 }
 refreshSignalHistory();setInterval(refreshSignalHistory,60000);
 
-refreshSignal();setInterval(refreshSignal,60000);
+refreshSignal();setInterval(()=>{if(document.visibilityState!=="hidden")refreshSignal();},10000);
+setInterval(updateSignalFeedAge,1000);
 refresh();setInterval(refresh,1500);
 
 // SEY FX Professional Analysis: same read-only market data as signal endpoint.
