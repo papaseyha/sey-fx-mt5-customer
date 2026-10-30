@@ -252,6 +252,13 @@ button { max-width:100%; touch-action:manipulation; }
 #signal .sey-history-win{color:#42d595!important}#signal .sey-history-loss{color:#ff5260!important}#signal .sey-history-pending{color:#f2c75a!important}
 #signal .history-more{border-color:rgba(255,53,69,.32);background:#21171d;color:#ff8a98}
 </style>
+<style id="seyfx-tradingview-advanced-v7">
+#signal .tv-advanced-shell{height:420px;width:100%;background:#111115;border:1px solid rgba(255,53,69,.30);border-radius:10px;overflow:hidden}
+#signal .tv-note{font-size:10px;color:#a3a5ad;line-height:1.5;margin:7px 1px}
+#signal .sey-legacy-chart{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important;left:-10000px!important}
+#signal .analysis-timeframes{display:none!important}
+@media(max-width:390px){#signal .tv-advanced-shell{height:390px}}
+</style>
 </head>
 <body>
 <main>
@@ -270,13 +277,23 @@ button { max-width:100%; touch-action:manipulation; }
   <div class="card analysis-chart-card">
     <div class="analysis-top"><div><strong>📈 XAUUSD Live Analysis</strong><div class="small">Twelve Data · Closed M5 candles · Read-only</div></div><span id="analysisFeed" class="small">Loading...</span></div>
     <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
-    <div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 candlestick chart"></div>
+    <div class="tv-advanced-shell" aria-label="TradingView XAUUSD Advanced Chart">
+      <div class="tradingview-widget-container" style="height:100%;width:100%">
+        <div class="tradingview-widget-container__widget" style="height:calc(100% - 24px);width:100%"></div>
+        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener noreferrer" target="_blank">TradingView</a> chart</div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {"autosize":true,"symbol":"OANDA:XAUUSD","interval":"5","timezone":"Asia/Phnom_Penh","theme":"dark","style":"1","locale":"en","backgroundColor":"#111115","gridColor":"rgba(255,255,255,0.04)","hide_top_toolbar":false,"hide_legend":false,"allow_symbol_change":false,"save_image":false,"calendar":false,"studies":["MAExp@tv-basicstudies","MAExp@tv-basicstudies","MAExp@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"],"support_host":"https://www.tradingview.com"}
+        </script>
+      </div>
+    </div>
+    <p class="tv-note">TradingView indicators: set the three EMA lengths to <b>20, 50, 200</b> using indicator settings if defaults differ; RSI 14 and MACD 12/26/9. TradingView chart prices may differ from Twelve Data signals.</p>
+    <div class="sey-legacy-chart" aria-hidden="true">    <div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 candlestick chart"></div>
     <div id="seyChartMessage" class="small" role="status">Loading market candles...</div>
     <div id="signalFeedAge" class="small" style="font-size:10px;margin:2px 1px 4px;color:#a3a5ad" aria-live="off">Waiting for feed</div>
     <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
     <div class="indicator-row"><span>RSI (14)</span><strong id="rsiCaption">—</strong></div><div id="seyRsiChart" class="sey-indicator-chart"></div>
     <div class="indicator-row"><span>MACD (12,26,9)</span><strong id="macdCaption">—</strong></div><div id="seyMacdChart" class="sey-indicator-chart"></div>
-    <p class="setting-note">Chart uses the same Twelve Data feed as SEY FX signals. Signals and TP/SL are drawn only when confirmed by the backend. No automatic orders.</p>
+    <p class="setting-note">TradingView is visual-only. BUY/SELL, TP/SL, Market Analysis and History continue using Twelve Data closed M5 candles; no automatic orders.</p>
   </div>
   <!-- Compact signal cards: all original DOM IDs retained for backend refresh -->
   <div class="sey-compact-signals" aria-label="XAUUSD Signal Summary">
