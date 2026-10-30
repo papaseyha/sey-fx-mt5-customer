@@ -227,6 +227,31 @@ button { max-width:100%; touch-action:manipulation; }
 #signal .sey-history-table td.sey-history-pending{color:#f2c75a;font-weight:800}
 #signal .history-more{margin-top:7px;padding:9px}
 </style>
+<style id="seyfx-signal-red-history-v6">
+/* Signal-only palette matching the red/black dashboard reference. */
+#signal .analysis-chart-card{background:linear-gradient(145deg,#24161c,#111115 78%);border:1px solid rgba(255,53,69,.38)}
+#signal .analysis-tile,#signal .sey-mini-card,#signal .signal-history-card{background:linear-gradient(150deg,#1c191f,#101014);border:1px solid rgba(255,53,69,.29)}
+#signal .analysis-timeframes .tf-active{background:#e92743;color:#fff;border-color:#f54b62}
+#signal .analysis-timeframes span{border-color:rgba(255,83,105,.23);color:#b9b3bc}
+#signal .sey-price-chart{background:#100c11}
+#signal .analysis-top #analysisFeed{color:#ff6679!important;border:1px solid rgba(255,53,69,.3);border-radius:18px;padding:5px 8px}
+#signal .sey-mini-card{border-radius:12px}
+#signal .analysis-tile{border-radius:12px!important}
+#signal .dist-track{background:#251a20}
+#signal .sey-history-scroll{overflow:visible;width:100%;max-width:100%}
+#signal .sey-history-cards{display:grid;gap:9px}
+#signal .sey-history-item{background:linear-gradient(145deg,#211b22,#121216);border:1px solid rgba(255,68,88,.26);border-radius:13px;padding:11px;min-width:0}
+#signal .sey-history-head{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:9px}
+#signal .sey-history-time{color:#aaa8b0;font-size:10px}
+#signal .sey-history-side{font-size:12px;font-weight:850}
+#signal .sey-history-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 5px}
+#signal .sey-history-field{min-width:0;background:#ffffff06;border-radius:8px;padding:7px 5px}
+#signal .sey-history-field span{display:block;font-size:9px;color:#9fa0aa;margin-bottom:4px}
+#signal .sey-history-field strong{display:block;font-size:clamp(10px,2.7vw,12px);font-weight:700;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#signal .sey-history-result{font-size:10px;font-weight:800;border:1px solid #ffffff2c;border-radius:7px;padding:5px 7px;white-space:nowrap}
+#signal .sey-history-win{color:#42d595!important}#signal .sey-history-loss{color:#ff5260!important}#signal .sey-history-pending{color:#f2c75a!important}
+#signal .history-more{border-color:rgba(255,53,69,.32);background:#21171d;color:#ff8a98}
+</style>
 </head>
 <body>
 <main>
@@ -396,38 +421,44 @@ function renderSignalHistory(){
   more.classList.toggle('hidden',signals.length<=5);
   more.textContent=signalHistoryExpanded?'Show Less':'View All ('+signals.length+')';
   if(!signals.length)return;
-  const scroll=document.createElement('div');scroll.className='sey-history-scroll';
-  scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Scrollable XAUUSD signal history');scroll.tabIndex=0;
-  const table=document.createElement('table');table.className='sey-history-table';
-  const thead=document.createElement('thead'),heading=document.createElement('tr');
-  ['Time','Type','Entry','TP1','TP2','TP3','SL','Result'].forEach(label=>{const th=document.createElement('th');th.textContent=label;heading.append(th);});
-  thead.append(heading);table.append(thead);
-  const tbody=document.createElement('tbody');
+  const wrap=document.createElement('div');wrap.className='sey-history-cards';
   const price=v=>{if(v===null||v===undefined||v==='')return '—';const n=Number(v);return Number.isFinite(n)?n.toFixed(3):'—';};
   for(const item of (signalHistoryExpanded?signals:signals.slice(0,5))){
     const side=String(item.side).toUpperCase();
-    const date=new Date(item.occurredAt);const time=Number.isNaN(date.getTime())?'—':date.toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
+    const date=new Date(item.occurredAt);
+    const time=Number.isNaN(date.getTime())?'—':date.toLocaleString('en-GB',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});
     const raw=String(item.outcomeStatus??item.outcome??item.status??item.result??'').toUpperCase().replace(/[_-]/g,' ');
     let result='—',statusClass='';
-    if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp2===true){result='TP2 ✓';statusClass='sey-history-win';}
-    else if(/STOP LOSS|SL HIT|SL REACHED/.test(raw) && item.hitTp1===true){result='TP1 ✓';statusClass='sey-history-win';}
+    if(/STOP LOSS|SL HIT|SL REACHED/.test(raw)){result='SL ✕';statusClass='sey-history-loss';}
     else if(/TP3 HIT/.test(raw)){result='TP3 ✓';statusClass='sey-history-win';}
     else if(/TP2 HIT/.test(raw)){result='TP2 ✓';statusClass='sey-history-win';}
     else if(/TP1 HIT/.test(raw)){result='TP1 ✓';statusClass='sey-history-win';}
     else if(/TAKE PROFIT|TP HIT|TP REACHED/.test(raw)){result='TP ✓';statusClass='sey-history-win';}
-    else if(/STOP LOSS|SL HIT|SL REACHED/.test(raw)){result='SL ✕';statusClass='sey-history-loss';}
     else if(/AMBIGUOUS/.test(raw)){result='CHECK';statusClass='sey-history-pending';}
     else if(/WAITING ENTRY/.test(raw)){result='PENDING';statusClass='sey-history-pending';}
     else if(/ACTIVE|ENTRY HIT|OPEN/.test(raw)){result='OPEN';statusClass='sey-history-pending';}
-    const tr=document.createElement('tr');
-    [time,side,price(item.entry),price(item.tp1),price(item.tp2),price(item.tp3),price(item.stopLoss),result].forEach((value,i)=>{
-      const td=document.createElement('td');td.textContent=value;
-      if(i===1)td.className=side==='BUY'?'sey-history-win':'sey-history-loss';
-      if(i===7)td.className=statusClass;
-      tr.append(td);
-    });tbody.append(tr);
+    const card=document.createElement('article');card.className='sey-history-item';
+    const head=document.createElement('div');head.className='sey-history-head';
+    const left=document.createElement('div');
+    const sideNode=document.createElement('strong');sideNode.className='sey-history-side '+(side==='BUY'?'sey-history-win':'sey-history-loss');sideNode.textContent=side;
+    const timeNode=document.createElement('div');timeNode.className='sey-history-time';timeNode.textContent=time;
+    left.append(sideNode,timeNode);
+    const resultNode=document.createElement('span');resultNode.className='sey-history-result '+statusClass;resultNode.textContent=result;
+    head.append(left,resultNode);card.append(head);
+    const fields=document.createElement('div');fields.className='sey-history-fields';
+    [['Entry',item.entry],['SL',item.stopLoss],['TP1',item.tp1],['TP2',item.tp2],['TP3',item.tp3]].forEach(([label,value])=>{
+      const field=document.createElement('div');field.className='sey-history-field';
+      const labelNode=document.createElement('span');labelNode.textContent=label;
+      const valueNode=document.createElement('strong');valueNode.textContent=price(value);
+      field.append(labelNode,valueNode);fields.append(field);
+    });
+    // Preserve backend TP milestones without concealing a later stop-loss outcome.
+    const hits=[['TP1',item.hitTp1??item.hit_tp1],['TP2',item.hitTp2??item.hit_tp2],['TP3',item.hitTp3??item.hit_tp3]]
+      .filter(([,v])=>v===true).map(([name])=>name+' ✓');
+    if(hits.length){const hitField=document.createElement('div');hitField.className='sey-history-field';const lab=document.createElement('span');lab.textContent='Reached';const val=document.createElement('strong');val.className='sey-history-win';val.textContent=hits.join(' · ');hitField.append(lab,val);fields.append(hitField);}
+    card.append(fields);wrap.append(card);
   }
-  table.append(tbody);scroll.append(table);list.append(scroll);
+  list.append(wrap);
 }
 async function refreshSignalHistory(){
   if(!telegramInitData)return;
@@ -451,7 +482,7 @@ let seyLastMarket=null;
 function emaCalc(values,p){let result=Array(values.length).fill(null);if(values.length<p)return result;let v=values.slice(0,p).reduce((a,b)=>a+b,0)/p;result[p-1]=v;const k=2/(p+1);for(let i=p;i<values.length;i++){v=values[i]*k+v*(1-k);result[i]=v;}return result;}
 function rsiCalc(values,p=14){let out=Array(values.length).fill(null),g=0,l=0;if(values.length<=p)return out;for(let i=1;i<=p;i++){let d=values[i]-values[i-1];g+=Math.max(d,0);l+=Math.max(-d,0);}g/=p;l/=p;out[p]=l===0?(g===0?50:100):100-100/(1+g/l);for(let i=p+1;i<values.length;i++){let d=values[i]-values[i-1];g=(g*(p-1)+Math.max(d,0))/p;l=(l*(p-1)+Math.max(-d,0))/p;out[i]=l===0?(g===0?50:100):100-100/(1+g/l);}return out;}
 function timeUTC(v){if(!/^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test(v))return null;const t=Date.parse(v.replace(' ','T')+'Z');return Number.isFinite(t)?Math.floor(t/1000):null;}
-function chartOptions(height){return {height,layout:{background:{type:'solid',color:'#0b111a'},textColor:'#aab4c2',fontSize:10},grid:{vertLines:{color:'#17202b'},horzLines:{color:'#17202b'}},rightPriceScale:{borderColor:'#303744'},timeScale:{borderColor:'#303744',timeVisible:true,secondsVisible:false},crosshair:{mode:1},handleScroll:true,handleScale:true};}
+function chartOptions(height){return {height,layout:{background:{type:'solid',color:'#100c11'},textColor:'#aab4c2',fontSize:10},grid:{vertLines:{color:'#291923'},horzLines:{color:'#291923'}},rightPriceScale:{borderColor:'#303744'},timeScale:{borderColor:'#303744',timeVisible:true,secondsVisible:false},crosshair:{mode:1},handleScroll:true,handleScale:true};}
 function ensureCharts(){if(seyChart)return true;if(!window.LightweightCharts)return false;const lib=window.LightweightCharts;const root=el('seyPriceChart');seyChart=lib.createChart(root,{...chartOptions(238),width:root.clientWidth||320});seyCandles=seyChart.addCandlestickSeries({upColor:'#18c991',downColor:'#f05b65',wickUpColor:'#18c991',wickDownColor:'#f05b65',borderVisible:false});seyEma20=seyChart.addLineSeries({color:'#3298ff',lineWidth:2,priceLineVisible:false,lastValueVisible:false});seyEma50=seyChart.addLineSeries({color:'#f2a23d',lineWidth:2,priceLineVisible:false,lastValueVisible:false});seyEma200=seyChart.addLineSeries({color:'#ddd',lineWidth:1,priceLineVisible:false,lastValueVisible:false});const r=el('seyRsiChart');seyRsiChart=lib.createChart(r,{...chartOptions(58),width:r.clientWidth||320,timeScale:{visible:false},rightPriceScale:{visible:true,borderVisible:false}});seyRsiLine=seyRsiChart.addLineSeries({color:'#a26aff',lineWidth:2,priceLineVisible:false});const m=el('seyMacdChart');seyMacdChart=lib.createChart(m,{...chartOptions(58),width:m.clientWidth||320,timeScale:{visible:false},rightPriceScale:{visible:true,borderVisible:false}});seyMacdLine=seyMacdChart.addLineSeries({color:'#25c3f5',lineWidth:2,priceLineVisible:false});if(window.ResizeObserver){const obs=new ResizeObserver(()=>{for(const [ch,id] of [[seyChart,'seyPriceChart'],[seyRsiChart,'seyRsiChart'],[seyMacdChart,'seyMacdChart']])ch.applyOptions({width:el(id).clientWidth||320});});['seyPriceChart','seyRsiChart','seyMacdChart'].forEach(id=>obs.observe(el(id)));}return true;}
 function valueAt(v){return Number.isFinite(v)?v.toFixed(2):'—';}
 function setAnalysis(id,value,color){const e=el(id);if(!e)return;e.textContent=value;if(color)e.style.color=color;}
