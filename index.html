@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08090c">
-<title>SEY FX • Trading Control</title>
+<title>ZYNTRA • Trading Control</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{color-scheme:dark;--bg:#08090c;--panel:#181a1f;--panel2:#202228;--gold:#ff3545;--gold2:#e62638;--text:#f8f9fb;--muted:#a3a5ad;--border:rgba(255,255,255,.105);--green:#42d595;--red:#ff5260}
@@ -258,7 +258,7 @@ button { max-width:100%; touch-action:manipulation; }
 </head>
 <body>
 <main>
-<header class="header"><div class="brand"><div class="mark" aria-label="SEY FX logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">SEY <span class="fx">FX</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
+<header class="header"><div class="brand"><div class="mark" aria-label="ZYNTRA logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">ZYN<span class="fx">TRA</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
 <section id="dashboard" class="section app-page active-page">
 <div class="card hero"><div class="eyebrow">Current Account Balance</div><div class="big-money" id="balance">—</div><div class="today"><strong id="profitday">—</strong> <span>Profit today</span></div>
 <svg class="chart" viewBox="0 0 420 120" preserveAspectRatio="none" aria-label="Decorative chart, not live market data"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff3448" stop-opacity=".3"/><stop offset="1" stop-color="#ff3448" stop-opacity="0"/></linearGradient></defs><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12 L420 120 L0 120Z" fill="url(#fill)"/><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12" fill="none" stroke="#ff6572" stroke-width="3.5" stroke-linecap="round"/></svg><div class="chart-note">Illustrative chart • Not live trading history</div></div>
@@ -268,8 +268,8 @@ button { max-width:100%; touch-action:manipulation; }
 <div class="section-head"><h2>Account Overview</h2><span class="small">MT5 data</span></div>
 <div class="metric-grid"><div class="metric"><div class="label">Equity</div><div class="number" id="equity">—</div></div><div class="metric"><div class="label">Floating P/L</div><div class="number" id="floating">—</div></div><div class="metric"><div class="label">Open Positions</div><div class="number" id="positions">—</div></div><div class="metric"><div class="label">Profit Day</div><div class="number gold" id="profitday2">—</div></div></div>
 </section>
-<section id="signal" class="section app-page" aria-label="SEY FX Signal">
-  <div class="section-head"><h2>SEY FX Signal</h2><span class="small">Independent · M5</span></div>
+<section id="signal" class="section app-page" aria-label="ZYNTRA Signal">
+  <div class="section-head"><h2>ZYNTRA Signal</h2><span class="small">Independent · M5</span></div>
   <div class="card analysis-chart-card">
     <div class="analysis-top"><div><strong>📈 XAUUSD Live Analysis</strong><div class="small">Twelve Data · Closed M5 candles · Read-only</div></div><span id="analysisFeed" class="small">Loading...</span></div>
     <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
@@ -279,7 +279,7 @@ button { max-width:100%; touch-action:manipulation; }
     <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
     <div class="indicator-row"><span>RSI (14)</span><strong id="rsiCaption">—</strong></div><div id="seyRsiChart" class="sey-indicator-chart"></div>
     <div class="indicator-row"><span>MACD (12,26,9)</span><strong id="macdCaption">—</strong></div><div id="seyMacdChart" class="sey-indicator-chart"></div>
-    <p class="setting-note">Chart uses the same Twelve Data feed as SEY FX signals. Signals and TP/SL are drawn only when confirmed by the backend. No automatic orders.</p>
+    <p class="setting-note">Chart uses the same Twelve Data feed as ZYNTRA signals. Signals and TP/SL are drawn only when confirmed by the backend. No automatic orders.</p>
   </div>
   <!-- Compact signal cards: all original DOM IDs retained for backend refresh -->
   <div class="sey-compact-signals" aria-label="XAUUSD Signal Summary">
@@ -323,7 +323,7 @@ button { max-width:100%; touch-action:manipulation; }
 <section id="history" class="section app-page"><div class="section-head"><h2>Trading History</h2><span class="small">MT5 records</span></div><div class="card"><div class="quote"><div class="quote-icon">◷</div><div class="quote-info"><div class="name">Profit today</div><div class="value gold" id="historyProfitDay">—</div></div></div><p class="info">Full closed-trade history is not available from the current Mini App API. This page shows today's reported profit only; no sample trades are presented as real records.</p><button class="save" type="button" onclick="refresh()">REFRESH PROFIT</button></div></section>
 <section id="connect-mt5" class="section app-page"><div class="section-head"><h2>Connect MT5</h2><span class="small">Account pairing</span></div><div class="card"><div class="connection-status" id="pairStatus">Checking MT5 connection...</div><div id="pairingForm"><p class="info">Generate a pairing code, then enter it in your MT5 Bridge EA. Code expires after 5 minutes. Keep it private.</p><label class="pair-label" for="pairingCode">PAIRING CODE</label><input class="field pair-code" id="pairingCode" type="text" placeholder="XXXX-XXXX-XXXX" readonly autocomplete="off"><button class="primary" id="connectMt5Btn" type="button" onclick="connectMT5()">GENERATE PAIRING CODE</button></div><button class="danger hidden" id="disconnectMt5Btn" type="button" onclick="disconnectMT5()">DISCONNECT MT5</button></div></section>
 <div class="card app-page active-page" id="system-status"><div class="section-head" style="margin:0 0 8px"><h2 style="font-size:15px">System Status</h2><button type="button" class="save" style="width:auto;margin:0;padding:8px 12px" onclick="refresh()">REFRESH</button></div><div class="info" id="status" role="status">Checking MT5 connection...</div></div>
-<div class="footer">SEY FX • MT5 TRADING CONTROL</div>
+<div class="footer">ZYNTRA • MT5 TRADING CONTROL</div>
 </main>
 <nav class="nav" aria-label="Main navigation">
 <button class="active" type="button" data-page="dashboard" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
