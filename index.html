@@ -253,8 +253,7 @@ button { max-width:100%; touch-action:manipulation; }
 #signal .history-more{border-color:rgba(255,53,69,.32);background:#21171d;color:#ff8a98}
 /* Remove duplicate outer History frame; retain each trade card. */
 #signal .signal-history-card{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important;min-height:0!important;overflow:visible!important}
-</style>
-
+</style><style>.nav:has(#adminNav:not(.hidden)){grid-template-columns:repeat(6,minmax(0,1fr))}</style>
 </head>
 <body>
 <main>
@@ -306,6 +305,7 @@ button { max-width:100%; touch-action:manipulation; }
     </div>
   </div>
 </section>
+<section id="admin" class="section app-page"><div class="section-head"><h2>Admin • MT5 Accounts</h2></div><div class="card"><p class="info">Unpair removes the backend link and revokes its bridge key. It does not stop a locally running MT5 EA or close trades. Stop the EA first.</p><button class="save" type="button" onclick="loadAdminAccounts()">REFRESH ACCOUNTS</button><div id="adminAccounts" class="info" style="margin-top:14px">Loading...</div><div id="adminMessage" class="feedback" role="status"></div></div></section>
 <section id="settings" class="section app-page">
   <div class="section-head"><h2>Bot Settings</h2><span class="small">Control your EA</span></div>
   <div class="card">
@@ -331,7 +331,7 @@ button { max-width:100%; touch-action:manipulation; }
 <button type="button" data-page="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Settings</button>
 <button type="button" data-page="history" onclick="go('history',this)"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>History</button>
 <button type="button" data-page="connect-mt5" onclick="go('connect-mt5',this)"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.2 1.2"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0-7 7l1.2-1.2"/></svg>Connect MT5</button>
-</nav>
+<button id="adminNav" class="hidden" type="button" data-page="admin" onclick="go('admin',this);loadAdminAccounts()">Admin</button></nav>
 <script>
 'use strict';
 const API_BASE='https://sey-fx-customer-backend-1.onrender.com';
@@ -520,6 +520,26 @@ const sample=closed.slice(-80),lo=Math.min(...sample.map(c=>c.low)),hi=Math.max(
 if(!ensureCharts()){setAnalysis('seyChartMessage','Chart library unavailable; analysis values remain available.');return;}const series=(vals)=>vals.flatMap((v,i)=>Number.isFinite(v)?[{time:closed[i].time,value:v}]:[]);seyCandles.setData(closed.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));seyEma20.setData(series(ema20));seyEma50.setData(series(ema50));seyEma200.setData(series(ema200));seyRsiLine.setData(series(rsi));seyMacdLine.setData(series(macd));seySignalLines.forEach(line=>seyCandles.removePriceLine(line));seySignalLines=[];if(active){const levels=[['Entry',data.entry,'#f1f1f1'],['SL',data.stopLoss,'#f05b65'],['TP1',data.tp1,'#23c88b'],['TP2',data.tp2,'#23c88b'],['TP3',data.tp3,'#23c88b']];for(const [title,price,c] of levels){seySignalLines.push(seyCandles.createPriceLine({price:Number(price),color:c,lineWidth:1,lineStyle:2,axisLabelVisible:true,title}));}const t=timeUTC(data.signalCandleTime);if(t&&closed.some(c=>c.time===t)){seyCandles.setMarkers([{time:t,position:data.signal==='BUY'?'belowBar':'aboveBar',color:data.signal==='BUY'?'#2ce69e':'#f05b65',shape:data.signal==='BUY'?'arrowUp':'arrowDown',text:data.signal}]);}else seyCandles.setMarkers([]);}else seyCandles.setMarkers([]);seyChart.timeScale().fitContent();seyRsiChart.timeScale().fitContent();seyMacdChart.timeScale().fitContent();setAnalysis('analysisFeed',data.cached?'CACHED':'LIVE FEED',data.cached?'#e9c36c':'#42d595');setAnalysis('seyChartMessage','Last closed M5 candle: '+String(closed[latest]?.time?new Date(closed[latest].time*1000).toISOString().slice(0,16).replace('T',' ')+' UTC':'—'));
 }
 
+
+async function loadAdminAccounts(){
+ const list=el('adminAccounts'),msg=el('adminMessage');list.textContent='Loading...';msg.textContent='';
+ try{const data=await request('/admin/mt5-accounts');list.replaceChildren();
+ if(!data.accounts?.length){list.textContent='No MT5 accounts';return;}
+ for(const a of data.accounts){const card=document.createElement('div');card.style.cssText='padding:12px 0;border-bottom:1px solid #ffffff22';
+ const info=document.createElement('div');info.textContent='MT5: '+a.accountId+' • Telegram: '+a.userId;
+ const btn=document.createElement('button');btn.className='danger';btn.type='button';btn.style.marginTop='9px';btn.textContent='UNPAIR '+a.accountId;
+ btn.onclick=()=>unpairAdminAccount(a.accountId,btn);card.append(info,btn);list.append(card);}
+ }catch(e){list.textContent='Unable to load: '+e.message;}
+}
+async function unpairAdminAccount(accountId,btn){
+ const typed=prompt('Type MT5 account number '+accountId+' to confirm:');if(typed!==accountId)return;
+ if(!confirm('Unpair '+accountId+'? Stop its EA first. This does not close trades.'))return;
+ btn.disabled=true;
+ try{await request('/admin/mt5-accounts/unpair',{method:'POST',body:JSON.stringify({accountId,confirmAccountId:typed})});
+ await loadAdminAccounts();el('adminMessage').textContent='Unpaired '+accountId;
+ }catch(e){el('adminMessage').textContent='Error: '+e.message;}finally{btn.disabled=false;}
+}
+(async()=>{if(!telegramInitData)return;try{await request('/admin/mt5-accounts');el('adminNav').classList.remove('hidden');}catch(e){}})();
 </script>
 </body>
 </html>
