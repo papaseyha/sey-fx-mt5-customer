@@ -331,10 +331,26 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 #payment .pay-choice button{min-width:0}
 @media(max-width:390px){#payment .profit-pay-row{flex-wrap:wrap}#payment .profit-pay-row .pay-action{width:100%}#payment .support-panel{flex-wrap:wrap}#payment .support-panel .pay-action{width:100%}#payment .pay-history-row{gap:7px}#payment .pay-history-status{font-size:9px;padding:5px}}
 </style>
+
+<style id="zyntra-subscription-compact-v2">
+/* Compact subscription card; visual-only, keeps original IDs and logic. */
+#payment .subscription-premium{padding:14px 15px 12px!important;border-radius:18px!important}
+#payment .subscription-premium .sub-top h3{font-size:16px!important;margin-top:3px!important}
+#payment .subscription-premium .sub-eyebrow{font-size:8px!important;letter-spacing:1.5px!important}
+#payment .subscription-premium .sub-main{gap:14px!important;margin:13px 0 12px!important}
+#payment .subscription-premium .sub-ring{width:78px!important;height:78px!important;flex:0 0 78px!important}
+#payment .subscription-premium .sub-ring-inner{width:65px!important;height:65px!important}
+#payment .subscription-premium .sub-ring-inner strong{font-size:25px!important}
+#payment .subscription-premium .sub-ring-inner small{font-size:7px!important}
+#payment .subscription-premium .sub-summary strong{font-size:16px!important;margin:4px 0!important}
+#payment .subscription-premium .sub-dates{margin-top:10px!important;padding:8px 0!important}
+#payment .subscription-premium .sub-foot{margin-top:9px!important}
+#payment .subscription-premium .sub-status{padding:5px 9px!important;font-size:9px!important}
+</style>
 </head>
 <body>
 <main>
-<header class="header"><div class="brand"><div class="mark" aria-label="SEY FX logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">SEY <span class="fx">FX</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
+<header class="header"><div class="brand"><div class="mark" aria-label="ZYNTRA logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">ZYN<span class="fx">TRA</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
 <section id="dashboard" class="section app-page active-page">
 <div class="card hero"><div class="eyebrow">Current Account Balance</div><div class="big-money" id="balance">—</div><div class="today"><strong id="profitday">—</strong> <span>Profit today</span></div>
 <svg class="chart" viewBox="0 0 420 120" preserveAspectRatio="none" aria-label="Decorative chart, not live market data"><defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff3448" stop-opacity=".3"/><stop offset="1" stop-color="#ff3448" stop-opacity="0"/></linearGradient></defs><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12 L420 120 L0 120Z" fill="url(#fill)"/><path d="M0 95 C32 93 44 55 78 70 S132 108 167 62 S223 25 260 49 S312 92 348 38 S393 24 420 12" fill="none" stroke="#ff6572" stroke-width="3.5" stroke-linecap="round"/></svg><div class="chart-note">Illustrative chart • Not live trading history</div></div>
