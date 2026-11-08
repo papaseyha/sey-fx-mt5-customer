@@ -22,6 +22,23 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 .section-head{margin-bottom:10px}
 .signal-record{padding:12px 0;border-bottom:1px solid #ffffff17;display:flex;flex-direction:column;gap:7px;overflow-wrap:anywhere}
 .signal-record:last-child{border-bottom:0}
+
+/* ZYNTRA compact premium subscription card */
+.subscription-premium{position:relative;overflow:hidden;background:linear-gradient(132deg,#25202b 0%,#1b1c25 58%,#191b22 100%);border:1px solid #40323e;padding:18px 17px 15px;box-shadow:0 12px 32px #0003}
+.subscription-premium:before{content:"";position:absolute;top:-100px;right:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#ef355027,transparent 70%);pointer-events:none}
+.sub-top,.sub-main,.sub-dates,.sub-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative}
+.sub-top h3{font-size:19px;margin:5px 0 0}.sub-eyebrow{font-size:9px;letter-spacing:2px;font-weight:800;color:#fa7184}
+.sub-status{border:1px solid #37634e;background:#17352c;color:#58e2a1;border-radius:99px;padding:7px 10px;font-size:10px;font-weight:800;letter-spacing:.7px;white-space:nowrap}
+.sub-status.warning{border-color:#856037;background:#3d2c1b;color:#ffcb7a}.sub-status.expired{border-color:#874050;background:#45222c;color:#ff8fa1}
+.sub-main{justify-content:flex-start;gap:19px;margin:19px 0 16px}
+.sub-ring{width:104px;height:104px;flex:0 0 104px;border-radius:50%;background:conic-gradient(#fa3d5a 0%,#fa3d5a 0%,#34343e 0%);display:grid;place-items:center;box-shadow:0 0 0 5px #ffffff08}
+.sub-ring-inner{width:87px;height:87px;border-radius:50%;background:#1e1d26;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.sub-ring-inner strong{font-size:32px;line-height:1.15;color:white}.sub-ring-inner small{font-size:8px;letter-spacing:1px;color:#aaa9b5;margin-top:3px}
+.sub-summary{min-width:0;flex:1}.sub-plan-label{font-size:9px;letter-spacing:1.3px;color:#a9a4b1;font-weight:700}.sub-summary strong{display:block;color:white;font-size:19px;margin:6px 0}.sub-summary #subscriptionNotice{font-size:11px;color:#b6b2be;line-height:1.5}
+.sub-progress{height:5px;background:#34313c;border-radius:20px;overflow:hidden}.sub-progress>div{height:100%;width:0;background:linear-gradient(90deg,#ff405d,#ff8c8d);border-radius:20px;transition:width .3s}
+.sub-dates{margin-top:16px;padding:12px 0;border-bottom:1px solid #393640;gap:8px}.sub-dates>div{flex:1}.sub-dates>div:last-child{text-align:right}.sub-dates span{display:block;font-size:9px;letter-spacing:1px;color:#9995a3;margin-bottom:5px}.sub-dates strong{font-size:12px;color:#f4f0f5}
+.sub-foot{margin-top:13px;flex-wrap:wrap}.sub-foot span{font-size:10px;color:#aaa4b0}.sub-foot button{background:#ed304e;color:white;border:0;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;cursor:pointer}
+@media(max-width:350px){.sub-ring{width:88px;height:88px;flex-basis:88px}.sub-ring-inner{width:73px;height:73px}.sub-ring-inner strong{font-size:26px}.sub-main{gap:12px}.sub-summary strong{font-size:16px}}
 </style>
 
 <style id="seyfx-redesign">
@@ -281,7 +298,40 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 .pay-qr-card .pay-qr{width:min(100%,270px);max-width:270px;border-radius:6px;margin:12px auto 2px;image-rendering:auto}
 .pay-qr-card .pay-qr-label{font-size:12px;font-weight:800;color:#fff;letter-spacing:1px}
 .pay-qr-card .pay-qr-brand{font-size:17px;font-weight:900;color:#ff304e;margin-bottom:7px}
-</style></head>
+</style><style>
+/* ZYNTRA Payment Center visual refresh; isolated from MT5 control */
+#payment .pay-panel{border-radius:22px;background:linear-gradient(145deg,#202027,#17171d);border:1px solid #393640;padding:18px;margin:13px 0;box-shadow:0 8px 24px #0003}
+#payment .subscription-premium{background:radial-gradient(ellipse at 90% 80%,#5a1426 0%,transparent 48%),linear-gradient(135deg,#361923,#19171d 70%);border-color:#713141;box-shadow:0 10px 26px #0005, inset 0 -2px 0 #a32b42}
+#payment .subscription-premium .sub-ring{box-shadow:0 0 16px #ed365438}
+#payment .pay-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#payment .pay-title-row h3{margin:0}
+#payment .profit-pay-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(110deg,#391e28,#221d24);border:1px solid #54303c;border-radius:16px;padding:14px;margin-top:15px}
+#payment .profit-pay-row>div{min-width:0;flex:1}
+#payment .profit-pay-row .pay-price{font-size:26px;color:#ff4966;line-height:1.25;margin-top:5px}
+#payment .profit-pay-row .pay-muted{margin:6px 0 0;line-height:1.4}
+#payment .pay-mini-label{font-size:10px;color:#c8b9c0;letter-spacing:1px}
+#payment .profit-pay-row .pay-action{width:auto;min-width:122px;margin:0;padding:12px 14px;flex-shrink:0}
+#payment .pay-text-button{border:0;background:none;color:#ff4b68;font-weight:700;font-size:12px;padding:8px 0}
+#payment .pay-history-row[hidden]{display:none!important}
+#payment .pay-history-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #38343d}
+#payment .pay-history-icon{display:grid;place-items:center;flex:0 0 36px;height:36px;border-radius:10px;background:#49212c;color:#ff5671;font-size:18px}
+#payment .pay-history-main{flex:1;min-width:0}
+#payment .pay-history-name{font-size:12px;font-weight:750;color:#f6f5f7}
+#payment .pay-history-date{font-size:10px;color:#a4a0aa;margin-top:3px}
+#payment .pay-history-money{font-size:12px;color:#f7f5f6;font-weight:750;white-space:nowrap}
+#payment .pay-history-status{font-size:10px;border-radius:15px;padding:5px 7px;white-space:nowrap;background:#343039;color:#b9b4bd}
+#payment .pay-history-status.paid{color:#53e7a0;background:#103527}
+#payment .pay-history-status.rejected{color:#ff6680;background:#3c1c29}
+#payment .pay-history-status.pending{color:#f4c37d;background:#3d3021}
+#payment .pay-refresh{border:1px solid #4b3a42;color:#f0cbd1;background:#2a2028;border-radius:11px;padding:10px 12px;width:100%;margin-top:13px;font-weight:650}
+#payment .support-panel{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#payment .support-panel h3{margin:0 0 6px}
+#payment .support-panel .pay-muted{margin:0;line-height:1.5}
+#payment .support-panel .pay-action{width:auto;flex-shrink:0;margin:0;padding:11px 13px;background:#2a1c25;border:1px solid #f23851;color:#ffc2cc}
+#payment .pay-choice button{min-width:0}
+@media(max-width:390px){#payment .profit-pay-row{flex-wrap:wrap}#payment .profit-pay-row .pay-action{width:100%}#payment .support-panel{flex-wrap:wrap}#payment .support-panel .pay-action{width:100%}#payment .pay-history-row{gap:7px}#payment .pay-history-status{font-size:9px;padding:5px}}
+</style>
+</head>
 <body>
 <main>
 <header class="header"><div class="brand"><div class="mark" aria-label="SEY FX logo"><svg viewBox="0 0 64 64" aria-hidden="true" style="width:27px;height:27px"><path fill="#ff2535" d="M56 4 22 17 8 33 32 29 18 43 5 60 44 46 57 31 32 36 45 21Z"/></svg></div><div><div class="brand-name">SEY <span class="fx">FX</span></div><div class="brand-sub">MT5 TRADING CONTROL</div></div></div><div class="status-pill" id="liveStatus"><span class="dot"></span><span id="liveLabel">OFFLINE</span></div></header>
@@ -350,12 +400,18 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 <section id="connect-mt5" class="section app-page"><div class="section-head"><h2>Connect MT5</h2><span class="small">Account pairing</span></div><div class="card"><div class="connection-status" id="pairStatus">Checking MT5 connection...</div><div id="pairingForm"><p class="info">Generate a pairing code, then enter it in your MT5 Bridge EA. Code expires after 5 minutes. Keep it private.</p><label class="pair-label" for="pairingCode">PAIRING CODE</label><input class="field pair-code" id="pairingCode" type="text" placeholder="XXXX-XXXX-XXXX" readonly autocomplete="off"><button class="primary" id="connectMt5Btn" type="button" onclick="connectMT5()">GENERATE PAIRING CODE</button></div><button class="danger hidden" id="disconnectMt5Btn" type="button" onclick="disconnectMT5()">DISCONNECT MT5</button></div></section>
 <section id="payment" class="section app-page">
 <div class="section-head"><h2>Payment Center</h2><span class="small">Manual ABA KHQR</span></div>
-<div class="pay-panel" id="subscriptionStatusPanel"><h3>Subscription Status</h3><div id="subscriptionNotice" class="pay-muted" role="status">Checking subscription...</div><div id="subscriptionDates" class="pay-muted" style="margin-top:10px"></div><button class="pay-action" type="button" id="subscriptionRenewBtn" style="margin-top:14px" onclick="document.getElementById('payPlans').scrollIntoView({behavior:'smooth',block:'center'})">Renew Now</button></div>
-<div class="pay-panel"><h3>Subscription Payment</h3><p class="pay-muted">Select a plan. Admin approves after verifying your transfer.</p><div class="pay-choice" id="payPlans"><button type="button" class="selected" onclick="choosePayPlan('month1',this)">1 Month<br><b>$29</b></button><button type="button" onclick="choosePayPlan('month3',this)">3 Months<br><b>$87</b></button><button type="button" onclick="choosePayPlan('lifetime',this)">Lifetime<br><b>$499</b></button></div><button class="pay-action" type="button" onclick="createPayOrder('subscription')">Pay Subscription</button></div>
-<div class="pay-panel"><h3>Profit Sharing Payment</h3><p class="pay-muted">Admin sets the amount. No automatic profit calculation.</p><div class="pay-price" id="profitDue">Checking...</div><p class="pay-muted" id="profitDueNote">Only unpaid admin-assigned invoices appear here.</p><button class="pay-action" type="button" id="profitPayBtn" onclick="createPayOrder('profit')" disabled>Pay Profit Share</button></div>
+<div class="pay-panel subscription-premium" id="subscriptionStatusPanel">
+  <div class="sub-top"><div><div class="sub-eyebrow">✦ ZYNTRA MEMBERSHIP</div><h3>My Subscription</h3></div><span class="sub-status" id="subscriptionBadge">CHECKING</span></div>
+  <div class="sub-main"><div class="sub-ring" id="subscriptionRing"><div class="sub-ring-inner"><strong id="subscriptionDays">—</strong><small id="subscriptionDaysLabel">DAYS LEFT</small></div></div><div class="sub-summary"><span class="sub-plan-label">CURRENT PLAN</span><strong id="subscriptionPlan">Subscription</strong><div id="subscriptionNotice" role="status">Checking subscription...</div></div></div>
+  <div class="sub-progress"><div id="subscriptionProgress"></div></div>
+  <div class="sub-dates" id="subscriptionDates"><div><span>START DATE</span><strong id="subscriptionStart">—</strong></div><div><span>EXPIRY DATE</span><strong id="subscriptionExpiry">—</strong></div></div>
+  <div class="sub-foot"><span>🔔 Reminder only · Bot stays online</span><button type="button" id="subscriptionRenewBtn" onclick="showSubscriptionPlans()">Renew Now →</button></div>
+</div>
+<div class="pay-panel" id="subscriptionPurchasePanel"><h3>Subscription Payment</h3><p class="pay-muted">Select a plan. Admin approves after verifying your transfer.</p><div class="pay-choice" id="payPlans"><button type="button" class="selected" onclick="choosePayPlan('month1',this)">1 Month<br><b>$29</b></button><button type="button" onclick="choosePayPlan('month3',this)">3 Months<br><b>$87</b></button><button type="button" onclick="choosePayPlan('lifetime',this)">Lifetime<br><b>$499</b></button></div><button class="pay-action" type="button" onclick="createPayOrder('subscription')">Pay Subscription</button></div>
+<div class="pay-panel profit-panel"><div class="pay-title-row"><h3>◉ Profit Sharing Payment</h3></div><p class="pay-muted">Admin sets the amount. No automatic profit calculation.</p><div class="profit-pay-row"><div><span class="pay-mini-label">PAYMENT DUE</span><div class="pay-price" id="profitDue">Checking...</div><p class="pay-muted" id="profitDueNote">Only unpaid admin-assigned invoices appear here.</p></div><button class="pay-action" type="button" id="profitPayBtn" onclick="createPayOrder('profit')" disabled>Pay Profit Share</button></div></div>
 <div class="pay-panel" id="payCheckout" style="display:none"><h3>ABA KHQR — SO SEYHA</h3><p class="pay-muted">Order: <span id="payOrderId"></span></p><div class="pay-price" id="payTotal"></div><div class="pay-qr-card"><div class="pay-qr-brand">KHQR</div><div class="pay-qr-label">SO SEYHA · USD</div><img class="pay-qr" src="aba-khqr.png" alt="ABA KHQR payment to SO SEYHA"></div><p class="pay-muted">This QR is not amount-locked. Enter the exact amount shown above in your bank app. Verify recipient SO SEYHA before paying.</p><label class="pay-muted" for="payReceipt">Payment receipt (JPG/PNG, max 1 MB)</label><input id="payReceipt" type="file" accept="image/png,image/jpeg"><button class="pay-action" type="button" onclick="submitPayReceipt()">Submit Receipt for Review</button><p class="pay-muted">Submitting a receipt does not confirm payment. Admin verifies actual bank credit.</p></div>
-<div class="pay-panel"><h3>Payment History</h3><div id="payHistory" class="pay-muted">Loading...</div><button class="pay-action" type="button" onclick="loadPayments()">Refresh Payments</button></div>
-<div class="pay-panel"><h3>Contact Admin</h3><p class="pay-muted">For MT5 pairing or payment assistance.</p><button class="pay-action" type="button" onclick="window.open('https://t.me/papaseyha','_blank','noopener')">Contact via Telegram</button></div><p id="payMessage" role="status" class="pay-error"></p></section>
+<div class="pay-panel history-panel"><div class="pay-title-row"><h3>◷ Payment History</h3><button class="pay-text-button" type="button" onclick="togglePaymentHistory()" id="paymentHistoryToggle">View All ›</button></div><div id="payHistory" class="pay-muted">Loading...</div><button class="pay-refresh" type="button" onclick="loadPayments()">↻ Refresh Payments</button></div>
+<div class="pay-panel support-panel"><div><h3>☏ Need Help?</h3><p class="pay-muted">Payment or subscription assistance.</p></div><button class="pay-action" type="button" onclick="window.open('https://t.me/papaseyha','_blank','noopener')">Contact Admin</button></div><p id="payMessage" role="status" class="pay-error"></p></section>
 <div class="card app-page active-page" id="system-status"><div class="section-head" style="margin:0 0 8px"><h2 style="font-size:15px">System Status</h2><button type="button" class="save" style="width:auto;margin:0;padding:8px 12px" onclick="refresh()">REFRESH</button></div><div class="info" id="status" role="status">Checking MT5 connection...</div></div>
 <div class="footer">ZYNTRA • MT5 TRADING CONTROL</div>
 </main>
@@ -555,12 +611,33 @@ if(!ensureCharts()){setAnalysis('seyChartMessage','Chart library unavailable; an
 }
 
 
-function renderSubscription(s){const notice=el('subscriptionNotice'),dates=el('subscriptionDates'),renew=el('subscriptionRenewBtn');const fmt=v=>new Date(v).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});dates.textContent='';renew.style.display='none';if(!s){notice.textContent='No active subscription recorded yet.';renew.style.display='block';return;}if(s.startedAt)dates.textContent='Start: '+fmt(s.startedAt);if(s.lifetime){notice.textContent='Lifetime subscription active';return;}if(!s.expiresAt){notice.textContent='Expiry date unavailable';return;}dates.textContent+=(dates.textContent?'  •  ':'')+'Expires: '+fmt(s.expiresAt);const remaining=new Date(s.expiresAt).getTime()-Date.now();if(remaining<=0){notice.textContent='Subscription expired — renewal reminder only. MT5 bot remains unaffected.';renew.style.display='block';}else if(remaining<=3*86400000){notice.textContent='Reminder: subscription expires in '+Math.ceil(remaining/86400000)+' day(s).';renew.style.display='block';}else{notice.textContent='Subscription active';}}
+function renderSubscription(s){
+ const notice=el('subscriptionNotice'),renew=el('subscriptionRenewBtn'),badge=el('subscriptionBadge'),days=el('subscriptionDays'),daysLabel=el('subscriptionDaysLabel'),plan=el('subscriptionPlan'),start=el('subscriptionStart'),expiry=el('subscriptionExpiry'),ring=el('subscriptionRing'),progress=el('subscriptionProgress');
+ const fmt=v=>{const d=new Date(v);return Number.isFinite(d.getTime())?d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—'};
+ const setRing=p=>{const pct=Math.max(0,Math.min(100,p));ring.style.background=`conic-gradient(#fa3d5a ${pct}%,#34343e ${pct}%)`;progress.style.width=pct+'%'};
+ renew.style.display='none';badge.className='sub-status';start.textContent=s?.startedAt?fmt(s.startedAt):'—';expiry.textContent=s?.expiresAt?fmt(s.expiresAt):'—';
+ if(!s){badge.textContent='INACTIVE';badge.classList.add('warning');days.textContent='—';plan.textContent='No plan';notice.textContent='No active subscription recorded';renew.style.display='block';setRing(0);return;}
+ if(s.lifetime){badge.textContent='ACTIVE';days.textContent='∞';daysLabel.textContent='LIFETIME';plan.textContent='Lifetime Access';expiry.textContent='No expiry';notice.textContent='Your membership has no expiry date';setRing(100);return;}
+ if(!s.expiresAt){badge.textContent='UNKNOWN';badge.classList.add('warning');days.textContent='—';plan.textContent='Subscription';notice.textContent='Expiry date unavailable';setRing(0);return;}
+ const remaining=new Date(s.expiresAt).getTime()-Date.now(),remainingDays=Math.max(0,Math.ceil(remaining/86400000));
+ const total=s.startedAt?new Date(s.expiresAt).getTime()-new Date(s.startedAt).getTime():0;
+ const durationDays=total>0?Math.round(total/86400000):0;
+ plan.textContent=durationDays>=75?'3 Months Plan':durationDays>0?'1 Month Plan':'Subscription';
+ days.textContent=remainingDays;daysLabel.textContent='DAYS LEFT';setRing(total>0?remaining/total*100:remaining>0?100:0);
+ if(remaining<=0){badge.textContent='EXPIRED';badge.classList.add('expired');notice.textContent='Renewal reminder · Bot stays online';renew.style.display='block';}
+ else if(remaining<=3*86400000){badge.textContent='EXPIRING';badge.classList.add('warning');notice.textContent='Renew soon · Bot stays online';renew.style.display='block';}
+ else{badge.textContent='ACTIVE';notice.textContent='Your subscription is active';}
+}
 // Payment Center is isolated from MT5 control commands.
 let payPlan='month1',payActiveOrder=null,payProfitInvoice=null;
 function payMsg(s,ok=false){const e=el('payMessage');e.className=ok?'pay-success':'pay-error';e.textContent=s||'';}
 function choosePayPlan(id,btn){payPlan=id;document.querySelectorAll('#payPlans button').forEach(b=>b.classList.toggle('selected',b===btn));}
-async function loadPayments(){try{const d=await request('/api/payments');payProfitInvoice=d.profitInvoice||null;renderSubscription(d.subscription);el('profitDue').textContent=payProfitInvoice?'$'+(payProfitInvoice.amountCents/100).toFixed(2):'No payment due';el('profitDueNote').textContent=payProfitInvoice?'Amount set by Admin — cannot edit':'Contact Admin if you need a profit-sharing invoice.';el('profitPayBtn').disabled=!payProfitInvoice;el('payHistory').replaceChildren();if(!d.payments.length)el('payHistory').textContent='No payments yet';d.payments.forEach(p=>{let row=document.createElement('div');row.className='pay-history-row';row.textContent=p.type+' • $'+(p.amountCents/100).toFixed(2)+' • '+p.status+' • '+new Date(p.createdAt).toLocaleDateString();el('payHistory').append(row);});}catch(e){payMsg(e.message)}}
+let paymentHistoryExpanded=false;
+function togglePaymentHistory(){paymentHistoryExpanded=!paymentHistoryExpanded;const b=el('paymentHistoryToggle');if(b)b.textContent=paymentHistoryExpanded?'Show Less ‹':'View All ›';document.querySelectorAll('#payHistory .pay-history-row').forEach((r,i)=>r.hidden=!paymentHistoryExpanded&&i>=3);}
+function showSubscriptionPlans(){const panel=el('subscriptionPurchasePanel');panel.hidden=false;panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'center'});}
+function updateSubscriptionPurchase(s){const panel=el('subscriptionPurchasePanel');if(!panel)return;const active=!!s&&(!!s.lifetime||!!s.expiresAt&&new Date(s.expiresAt).getTime()>Date.now());const days=s?.expiresAt?Math.ceil((new Date(s.expiresAt).getTime()-Date.now())/86400000):0;panel.style.display=active&&(s.lifetime||days>3)?'none':'block';}
+function renderPaymentRows(payments){const root=el('payHistory');root.replaceChildren();if(!payments.length){root.textContent='No payments yet';return;}payments.forEach((p,i)=>{const row=document.createElement('div');row.className='pay-history-row';row.hidden=!paymentHistoryExpanded&&i>=3;const ico=document.createElement('span');ico.className='pay-history-icon';ico.textContent=p.type==='profit'?'◉':'▣';const main=document.createElement('div');main.className='pay-history-main';const name=document.createElement('div');name.className='pay-history-name';name.textContent=p.type==='profit'?'Profit Share':'Subscription'+(p.plan==='month1'?' (1 Month)':p.plan==='month3'?' (3 Months)':p.plan==='lifetime'?' (Lifetime)':'');const date=document.createElement('div');date.className='pay-history-date';const dt=new Date(p.createdAt);date.textContent=Number.isFinite(dt.getTime())?dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';main.append(name,date);const money=document.createElement('span');money.className='pay-history-money';money.textContent='$'+(Number(p.amountCents||0)/100).toFixed(2);const status=document.createElement('span');const st=String(p.status||'pending');status.className='pay-history-status '+(st==='paid'?'paid':st==='rejected'?'rejected':'pending');status.textContent=st==='paid'?'✓ Paid':st==='rejected'?'✕ Rejected':st==='awaiting_receipt'?'Awaiting receipt':st==='pending'?'Pending':st;row.append(ico,main,money,status);root.append(row);});}
+async function loadPayments(){try{const d=await request('/api/payments');payProfitInvoice=d.profitInvoice||null;renderSubscription(d.subscription);updateSubscriptionPurchase(d.subscription);el('profitDue').textContent=payProfitInvoice?'$'+(payProfitInvoice.amountCents/100).toFixed(2):'No payment due';el('profitDueNote').textContent=payProfitInvoice?'Amount set by Admin — cannot edit':'Contact Admin if you need a profit-sharing invoice.';el('profitPayBtn').disabled=!payProfitInvoice;renderPaymentRows(d.payments||[]);}catch(e){payMsg(e.message)}}
 async function createPayOrder(type){try{payMsg('');const body=type==='subscription'?{type,plan:payPlan}:{type,invoiceId:payProfitInvoice?.id};const d=await request('/api/payments/create',{method:'POST',body:JSON.stringify(body)});payActiveOrder=d.payment;el('payCheckout').style.display='block';el('payOrderId').textContent=d.payment.id;el('payTotal').textContent='$'+(d.payment.amountCents/100).toFixed(2);el('payReceipt').value='';el('payCheckout').scrollIntoView({behavior:'smooth'});}catch(e){payMsg(e.message)}}
 async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a payment first');const file=el('payReceipt').files[0];if(!file||!['image/jpeg','image/png'].includes(file.type)||file.size>1024*1024)throw Error('Select a JPG/PNG receipt under 1 MB');const receipt=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(Error('Could not read image'));r.readAsDataURL(file)});await request('/api/payments/receipt',{method:'POST',body:JSON.stringify({paymentId:payActiveOrder.id,receipt})});payMsg('Receipt submitted. Awaiting Admin verification.',true);el('payCheckout').style.display='none';payActiveOrder=null;await loadPayments();}catch(e){payMsg(e.message)}}
 </script>
