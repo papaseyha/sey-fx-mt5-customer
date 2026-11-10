@@ -354,6 +354,18 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 #signal .analysis-timeframes span:first-child{border-color:#e92743;color:#fff;background:#e92743}
 @media(max-width:390px){#signal .zyntra-tv-wrap{height:315px}}
 </style>
+<style id="zyntra-smc-v1">
+#signal .zyntra-smc-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 1px 8px}
+#signal .zyntra-smc-header strong{font-size:12px;color:#f5f5f5}#signal .zyntra-smc-header strong span{background:#ed304e;border-radius:7px;padding:3px 6px;font-size:10px;margin-left:4px}
+#signal .zyntra-smc-header small{font-size:9px;color:#a7a7b2;text-align:right}
+#signal .zyntra-smc-stage{height:350px;position:relative;background:#100c11;border:1px solid #49232c;border-radius:9px;overflow:hidden}
+#signal .zyntra-smc-stage #seyPriceChart{height:100%!important;width:100%!important;position:relative!important;left:auto!important;top:auto!important;visibility:visible!important;pointer-events:auto!important}
+#signal #zyntraSmcCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+#signal .zyntra-smc-controls{display:flex;align-items:center;gap:5px;overflow-x:auto;margin:8px 0 5px;padding:5px 1px;scrollbar-width:none}
+#signal .zyntra-smc-controls label{display:flex;align-items:center;gap:3px;flex:none;padding:7px 6px;border:1px solid #6a2837;background:#24151c;border-radius:9px;color:#f2cbd2;font-size:10px;white-space:nowrap}
+#signal .zyntra-smc-controls input{accent-color:#f23852;width:13px;height:13px;margin:0}
+@media(max-width:390px){#signal .zyntra-smc-stage{height:315px}}
+</style>
 </head>
 <body>
 <main>
@@ -372,15 +384,16 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
   <div class="card analysis-chart-card">
     <div class="analysis-top"><div><strong>📈 XAUUSD Live Analysis</strong><div class="small">Twelve Data · Closed M5 candles · Read-only</div></div><span id="analysisFeed" class="small">Loading...</span></div>
     <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
-    <div class="zyntra-tv-wrap" aria-label="TradingView XAUUSD chart">
-      <div class="tradingview-widget-container" style="height:100%;width:100%">
-        <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-        {"autosize":true,"symbol":"OANDA:XAUUSD","interval":"5","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","backgroundColor":"#100c11","gridColor":"rgba(255,255,255,0.05)","hide_top_toolbar":false,"hide_legend":false,"allow_symbol_change":false,"save_image":false,"calendar":false,"support_host":"https://www.tradingview.com"}
-        </script>
-      </div>
+    <div class="zyntra-smc-header"><strong>Smart Money Concept <span>SMC</span></strong><small>TradingView Lightweight Charts · M5</small></div>
+    <div class="zyntra-smc-stage"><div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 SMC chart"></div><canvas id="zyntraSmcCanvas" aria-hidden="true"></canvas></div>
+    <div class="zyntra-smc-controls" aria-label="SMC overlays">
+      <label><input type="checkbox" data-smc="ob" checked> OB</label>
+      <label><input type="checkbox" data-smc="fvg" checked> FVG</label>
+      <label><input type="checkbox" data-smc="structure" checked> BOS/CHoCH</label>
+      <label><input type="checkbox" data-smc="liquidity" checked> Liquidity</label>
+      <label><input type="checkbox" data-smc="ema"> EMA</label>
     </div>
-    <div id="seyPriceChart" class="sey-price-chart zyntra-legacy-analysis-chart" aria-hidden="true"></div>
+    <div class="small" style="font-size:9px;color:#9ba2ac;margin:4px 1px">SMC zones are algorithmic estimates from closed Twelve Data candles, not the original Pine indicator. No trade orders.</div>
     <div id="seyChartMessage" class="small" role="status">Loading market candles...</div>
     <div id="signalFeedAge" class="small" style="font-size:10px;margin:2px 1px 4px;color:#a3a5ad" aria-live="off">Waiting for feed</div>
     <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
@@ -671,6 +684,75 @@ function renderPaymentRows(payments){const root=el('payHistory');root.replaceChi
 async function loadPayments(){try{const d=await request('/api/payments');payProfitInvoice=d.profitInvoice||null;renderSubscription(d.subscription);updateSubscriptionPurchase(d.subscription);el('profitDue').textContent=payProfitInvoice?'$'+(payProfitInvoice.amountCents/100).toFixed(2):'No payment due';el('profitDueNote').textContent=payProfitInvoice?'Amount set by Admin — cannot edit':'Contact Admin if you need a profit-sharing invoice.';el('profitPayBtn').disabled=!payProfitInvoice;renderPaymentRows(d.payments||[]);}catch(e){payMsg(e.message)}}
 async function createPayOrder(type){try{payMsg('');const body=type==='subscription'?{type,plan:payPlan}:{type,invoiceId:payProfitInvoice?.id};const d=await request('/api/payments/create',{method:'POST',body:JSON.stringify(body)});payActiveOrder=d.payment;el('payCheckout').style.display='block';el('payOrderId').textContent=d.payment.id;el('payTotal').textContent='$'+(d.payment.amountCents/100).toFixed(2);el('payReceipt').value='';el('payCheckout').scrollIntoView({behavior:'smooth'});}catch(e){payMsg(e.message)}}
 async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a payment first');const file=el('payReceipt').files[0];if(!file||!['image/jpeg','image/png'].includes(file.type)||file.size>1024*1024)throw Error('Select a JPG/PNG receipt under 1 MB');const receipt=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(Error('Could not read image'));r.readAsDataURL(file)});await request('/api/payments/receipt',{method:'POST',body:JSON.stringify({paymentId:payActiveOrder.id,receipt})});payMsg('Receipt submitted. Awaiting Admin verification.',true);el('payCheckout').style.display='none';payActiveOrder=null;await loadPayments();}catch(e){payMsg(e.message)}}
+</script>
+<script id="zyntra-smc-overlay-v1">
+(function(){
+'use strict';
+const opts={ob:true,fvg:true,structure:true,liquidity:true,ema:false};
+let candles=[],events=[],paintQueued=false;
+function scan(a){
+ const out=[];if(a.length<12)return out;
+ let highs=[],lows=[],prevHigh=null,prevLow=null,trend=0;
+ for(let i=3;i<a.length-3;i++){
+  const c=a[i],left=a.slice(i-3,i),right=a.slice(i+1,i+4);
+  if(left.every(v=>c.high>v.high)&&right.every(v=>c.high>=v.high)){highs.push({i,price:c.high});out.push({kind:'swing',i,price:c.high,label:prevHigh===null?'H':c.high>prevHigh?'HH':'LH',color:'#e3e8ef'});prevHigh=c.high;}
+  if(left.every(v=>c.low<v.low)&&right.every(v=>c.low<=v.low)){lows.push({i,price:c.low});out.push({kind:'swing',i,price:c.low,label:prevLow===null?'L':c.low>prevLow?'HL':'LL',color:'#e3e8ef'});prevLow=c.low;}
+ }
+ // Only use confirmed historical swings and breakouts; never look ahead for the breakout.
+ let hiIdx=0,loIdx=0,lastHi=null,lastLo=null,brokenHi=-1,brokenLo=-1;
+ for(let i=7;i<a.length;i++){
+  while(hiIdx<highs.length&&highs[hiIdx].i+3<i)lastHi=highs[hiIdx++];
+  while(loIdx<lows.length&&lows[loIdx].i+3<i)lastLo=lows[loIdx++];
+  const c=a[i];
+  if(lastHi&&lastHi.i!==brokenHi&&c.close>lastHi.price){out.push({kind:'break',from:lastHi.i,i,price:lastHi.price,label:trend===-1?'CHoCH':'BOS',bull:true});brokenHi=lastHi.i;trend=1;out.push({kind:'ob',from:Math.max(0,i-8),i,low:Math.min(...a.slice(Math.max(0,i-8),i).filter(v=>v.close<v.open).map(v=>v.low).concat([a[i-1].low])),high:a[i-1].high,bull:true});}
+  if(lastLo&&lastLo.i!==brokenLo&&c.close<lastLo.price){out.push({kind:'break',from:lastLo.i,i,price:lastLo.price,label:trend===1?'CHoCH':'BOS',bull:false});brokenLo=lastLo.i;trend=-1;out.push({kind:'ob',from:Math.max(0,i-8),i,low:a[i-1].low,high:Math.max(...a.slice(Math.max(0,i-8),i).filter(v=>v.close>v.open).map(v=>v.high).concat([a[i-1].high])),bull:false});}
+  if(i>=2){if(a[i].low>a[i-2].high)out.push({kind:'fvg',from:i-2,i,low:a[i-2].high,high:a[i].low,bull:true});else if(a[i].high<a[i-2].low)out.push({kind:'fvg',from:i-2,i,low:a[i].high,high:a[i-2].low,bull:false});}
+ }
+ // Cluster close swing levels into approximate liquidity zones.
+ for(const [points,bull] of [[highs,true],[lows,false]])for(let j=1;j<points.length;j++){
+  const p=points[j],q=points[j-1],tol=p.price*.00065;
+  if(Math.abs(p.price-q.price)<tol&&p.i-q.i<55)out.push({kind:'liquidity',from:q.i,i:p.i,low:Math.min(p.price,q.price)-tol*.4,high:Math.max(p.price,q.price)+tol*.4,bull});
+ }
+ return out;
+}
+function schedule(){if(paintQueued)return;paintQueued=true;requestAnimationFrame(()=>{paintQueued=false;draw()});}
+function draw(){
+ const canvas=document.getElementById('zyntraSmcCanvas'),stage=document.querySelector('.zyntra-smc-stage');
+ if(!canvas||!stage||!seyChart||!seyCandles||!candles.length)return;
+ const w=stage.clientWidth,h=stage.clientHeight,dpr=Math.min(devicePixelRatio||1,2);if(!w||!h)return;
+ if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+ const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);ctx.font='bold 10px system-ui';
+ const ts=seyChart.timeScale(),series=seyCandles;
+ const x=i=>ts.timeToCoordinate(candles[Math.max(0,Math.min(i,candles.length-1))].time);
+ const y=p=>series.priceToCoordinate(p);
+ const label=(txt,px,py,color)=>{if(!Number.isFinite(px)||!Number.isFinite(py)||py<8||py>h-16)return;ctx.font='bold 10px system-ui';const tw=ctx.measureText(txt).width;ctx.fillStyle='#100c11dd';ctx.fillRect(Math.max(1,px-tw/2-3),py-11,tw+6,15);ctx.fillStyle=color;ctx.fillText(txt,Math.max(4,px-tw/2),py)};
+ const visible=events.filter(e=>e.i>=Math.max(0,candles.length-115));
+ // Limit shapes to avoid overcrowding mobile charts.
+ for(const kind of ['ob','fvg','liquidity']){
+  if(!opts[kind])continue;let selected=visible.filter(e=>e.kind===kind).slice(- (kind==='fvg'?7:kind==='ob'?5:4));
+  for(const e of selected){const x1=x(e.from),x2=x(Math.min(candles.length-1,e.i+(kind==='liquidity'?15:22))),y1=y(e.high),y2=y(e.low);if([x1,x2,y1,y2].some(v=>v===null||!Number.isFinite(v)))continue;
+   const left=Math.max(0,Math.min(x1,x2)),right=Math.min(w-55,Math.max(x1,x2)),top=Math.max(0,Math.min(y1,y2)),bottom=Math.min(h,Math.max(y1,y2));if(right<=left||bottom<=top)continue;
+   const rgb=kind==='fvg'?'242,155,52':kind==='liquidity'?'59,121,239':e.bull?'46,205,135':'246,71,92';
+   ctx.fillStyle=`rgba(${rgb},.19)`;ctx.strokeStyle=`rgba(${rgb},.78)`;ctx.lineWidth=1;ctx.fillRect(left,top,right-left,bottom-top);ctx.strokeRect(left+.5,top+.5,right-left,bottom-top);
+   label(kind==='fvg'?'FVG':kind==='liquidity'?(e.bull?'Buy-side Liquidity':'Sell-side Liquidity'):(e.bull?'Bullish OB':'Bearish OB'),(left+right)/2,Math.max(13,(top+bottom)/2+3),'#f7f7fa');
+  }
+ }
+ if(opts.structure){for(const e of visible.filter(e=>e.kind==='break').slice(-7)){const x1=x(e.from),x2=x(e.i),yy=y(e.price);if([x1,x2,yy].some(v=>v===null||!Number.isFinite(v)))continue;ctx.strokeStyle=e.bull?'#39df9a':'#ff5266';ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(x1,yy);ctx.lineTo(x2,yy);ctx.stroke();ctx.setLineDash([]);label(e.label,(x1+x2)/2,yy-4,e.bull?'#42d595':'#ff6374')}
+ for(const e of visible.filter(e=>e.kind==='swing').slice(-18)){const xx=x(e.i),yy=y(e.price);if(xx!==null&&yy!==null)label(e.label,xx,yy+(e.label.includes('L')?17:-8),'#e7e9ee')}}
+}
+function bind(){document.querySelectorAll('[data-smc]').forEach(input=>input.addEventListener('change',()=>{opts[input.dataset.smc]=input.checked;applyEma();schedule()}));}
+function applyEma(){for(const item of [seyEma20,seyEma50,seyEma200])if(item)item.applyOptions({visible:opts.ema});}
+function install(){
+ bind();const original=window.renderProfessionalAnalysis;if(typeof original!=='function')return;
+ window.renderProfessionalAnalysis=function(data){const ret=original.apply(this,arguments);const input=Array.isArray(data?.candles)?data.candles:[];
+ const clean=input.map(c=>({time:timeUTC(c.time),open:+c.open,high:+c.high,low:+c.low,close:+c.close})).filter(c=>c.time&&[c.open,c.high,c.low,c.close].every(Number.isFinite)).sort((a,b)=>a.time-b.time);
+ candles=clean.filter((c,i)=>!i||c.time!==clean[i-1].time).slice(0,-1);events=scan(candles);if(seyChart){seyChart.applyOptions({height:document.querySelector('.zyntra-smc-stage').clientHeight||315});}applyEma();schedule();return ret};
+ const observer=new ResizeObserver(schedule);observer.observe(document.querySelector('.zyntra-smc-stage'));
+ let subscribed=false;const trySubscribe=()=>{if(subscribed||!seyChart)return;subscribed=true;seyChart.timeScale().subscribeVisibleLogicalRangeChange(schedule);applyEma();schedule()};
+ setInterval(trySubscribe,1200);trySubscribe();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
 </script>
 </body>
 </html>
