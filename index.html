@@ -347,6 +347,13 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
 #payment .subscription-premium .sub-foot{margin-top:9px!important}
 #payment .subscription-premium .sub-status{padding:5px 9px!important;font-size:9px!important}
 </style>
+<style id="zyntra-tradingview-embed-v1">
+/* TradingView widget shown to customers; original chart retained for existing signal calculations. */
+#signal .zyntra-tv-wrap{height:350px;width:100%;min-width:0;overflow:hidden;border-radius:10px;background:#100c11;border:1px solid rgba(255,255,255,.08)}
+#signal .zyntra-legacy-analysis-chart{position:absolute!important;left:-9999px!important;top:auto!important;width:320px!important;height:238px!important;visibility:hidden!important;pointer-events:none!important}
+#signal .analysis-timeframes span:first-child{border-color:#e92743;color:#fff;background:#e92743}
+@media(max-width:390px){#signal .zyntra-tv-wrap{height:315px}}
+</style>
 </head>
 <body>
 <main>
@@ -365,7 +372,15 @@ async function submitPayReceipt(){try{if(!payActiveOrder)throw Error('Create a p
   <div class="card analysis-chart-card">
     <div class="analysis-top"><div><strong>📈 XAUUSD Live Analysis</strong><div class="small">Twelve Data · Closed M5 candles · Read-only</div></div><span id="analysisFeed" class="small">Loading...</span></div>
     <div class="analysis-timeframes"><span class="tf-active">5m</span><span>EMA 20 / 50 / 200</span><span>RSI 14</span><span>MACD</span></div>
-    <div id="seyPriceChart" class="sey-price-chart" aria-label="XAUUSD M5 candlestick chart"></div>
+    <div class="zyntra-tv-wrap" aria-label="TradingView XAUUSD chart">
+      <div class="tradingview-widget-container" style="height:100%;width:100%">
+        <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {"autosize":true,"symbol":"OANDA:XAUUSD","interval":"5","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","backgroundColor":"#100c11","gridColor":"rgba(255,255,255,0.05)","hide_top_toolbar":false,"hide_legend":false,"allow_symbol_change":false,"save_image":false,"calendar":false,"support_host":"https://www.tradingview.com"}
+        </script>
+      </div>
+    </div>
+    <div id="seyPriceChart" class="sey-price-chart zyntra-legacy-analysis-chart" aria-hidden="true"></div>
     <div id="seyChartMessage" class="small" role="status">Loading market candles...</div>
     <div id="signalFeedAge" class="small" style="font-size:10px;margin:2px 1px 4px;color:#a3a5ad" aria-live="off">Waiting for feed</div>
     <div class="indicator-strip"><div><span>EMA20</span><b id="aEma20">—</b></div><div><span>EMA50</span><b id="aEma50">—</b></div><div><span>EMA200</span><b id="aEma200">—</b></div><div><span>RSI14</span><b id="aRsi">—</b></div></div>
